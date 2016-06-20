@@ -24,6 +24,7 @@
 
 #include "update_service.h"
 #define DELAY_MILLI 500;
+#define DELAY_CON_LOST 10;
 #define DEBUG 0
 
 
@@ -52,7 +53,7 @@ for(temp_pointer = (*List)->end; temp_pointer != NULL; temp_pointer = temp_point
 uint8_t check_for_updates(const struct_news_list *new_list,const struct_news_list *old_list,const uint16_t u16_intervall,const uint8_t u8_print_flag ){
 	
 uint16_t delay_milliseconds = DELAY_MILLI 	
-
+uint16_t delay_connection_lost = DELAY_CON_LOST 
 struct_news *str_ptr;
 
 
@@ -84,13 +85,20 @@ if(old_list != NULL){
 					}
 			
 				}
+				
+	update_assistant(&delay_milliseconds, &u16_intervall);
 	/* If old_list was not NULL */
 	return 1;
 }	
-
+else{
+	
+	
+	update_assistant(&delay_milliseconds, &delay_connection_lost);
+return 0;		
+}
 /* if old_list was 0 */	
 	
-return 0;	
+
 }
 
 
