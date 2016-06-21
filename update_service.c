@@ -57,7 +57,7 @@ uint16_t delay_connection_lost = DELAY_CON_LOST
 struct_news *str_ptr;
 
 
-update_assistant(&delay_milliseconds, &u16_intervall);	
+	
 
 
 	
