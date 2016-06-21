@@ -54,6 +54,13 @@ void set_server_adress_struct(const char* domain, const char *request, struct_ad
  * RSS Stringsd in unterschiedlicher länge
  * 
  * 61 / 62 Byte fehler in req_data
+ * 
+ * 
+ * 
+ * 
+ * #### issing terminating char at title
+ * 
+ * Baustelle update_service char * / char []
  */
  
  
