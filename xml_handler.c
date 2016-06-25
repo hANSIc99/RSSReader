@@ -350,53 +350,37 @@ struct_news_list * load_data(char *xml_string){
 }
 
 char * get_temp_string(char *xml_string, int startzeichen, int gesamtlaenge, int str_lenght){
-	int counter, m;
-	char * temp, *temp2;
+	
+	char *temp2, *temp3;
 	
 	/* str_lenght = overall lenght - start-sign */
 
-	m = 0;
-	temp =  malloc(str_lenght * sizeof(char));
 	temp2 = malloc(str_lenght * sizeof(char));
+	temp3 = xml_string + (size_t)(startzeichen  / sizeof(char));
 	
-	/* funktioniert */
-	temp2 = xml_string + (size_t)(startzeichen  / sizeof(char)); 
-	
-	
-	
-	for(counter = startzeichen; counter < (gesamtlaenge  /* +1 valgrind */  ); counter++){
-		temp[m] = xml_string[counter];
-		m++;
-	}
-	printf("\nStartzeichen: %d\n",startzeichen);
-	printf("\nStartzeichen temp: %d\n", (size_t)temp);
-	printf("\nStartzeichen temp + startzeichen: %d\n", ((size_t)temp)+ (size_t)(startzeichen / sizeof(char)));
-	printf("\nStartzeichen temp2: %d\n", (size_t)temp2);
-	printf("\nStartadresse xml_string: %d\n", (size_t)xml_string);
-	
-	strncpy(temp2, xml_string, str_lenght);
-	return temp;
+	strcpy(temp2, temp3);
+	return temp2;
 }
 
 char * get_server_info(char *xml_string, int startzeichen){	
-	int counter;
+
 	char * server_info;
 	server_info = (char*)malloc((startzeichen+1) * sizeof(char)); /* valgrind */
-	for(counter = 0; counter < startzeichen; counter++){
-		server_info[counter] = xml_string[counter];
-	}
-		
-	server_info[startzeichen+1] = '\0' ;
+
+	strncpy(server_info, xml_string, startzeichen+1);
+	server_info[startzeichen] = '\0' ;
 	return server_info;
 }
 
 
 char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
-	uint16_t counter, counter2, tag_lenght, rss_lenght;
+	uint16_t counter, tag_lenght, rss_lenght;
 	char * check_tag;
 	char * rss_string;
+
 	tag_lenght = strlen(end_tag);
 	check_tag = malloc(tag_lenght);
+
 	if(DEBUG){
 	printf("\nInteger str_lenght: %d\n", *str_lenght);
 	printf("\nInteger tag_lenght: %d\n", tag_lenght);
@@ -404,17 +388,8 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 		
 		for(counter = *str_lenght; counter > 0 ; counter--){
 		
-		
-			/* check_tag rückwärts vollschreiben */
-			for(counter2 = tag_lenght; counter2 > 0; counter2--){
-			
-				/* x zaehlt um 6 runter */
-			
-				int x = counter - ((tag_lenght - (counter2))+1);
-				/* check_tag 5, 4, 3 , 2, 1, 0 */
-				check_tag[counter2-1] = temp_string[x]; 		
 
-			}
+		strcpy(check_tag, temp_string + (size_t)(counter-tag_lenght));
 		
 		/* Vergleichen ob end_tag und check_tag übereinstimmen */
 		if(strncmp(check_tag, end_tag, tag_lenght) == 0){
@@ -427,7 +402,7 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 	}
 	free(check_tag);
 	/* endgültiger String wird erstellt, Ende (unbrauchbar) wird entfernt */
-	rss_string = (char *)malloc((rss_lenght+1) * sizeof(char));
+	rss_string = malloc((rss_lenght+1) * sizeof(char));
 	
 	for(counter = 0; counter < rss_lenght; counter++){
 	
