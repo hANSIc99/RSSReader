@@ -42,25 +42,7 @@ void get_server_address(char* address_string);
 void set_server_adress_struct(const char* domain, const char *request, struct_adress *s_addr);
 /* todo's:
  * 
- * STartliste aus der main weg lassen = List1alt
- * wird in append() verwendet)
- * 
- * 
- * Zeichenfindung strcspn nutzen statt eigener funktion
- * 
- * Token-FUnktion strtok nutzen
- * 
- * 
- * RSS Stringsd in unterschiedlicher länge
- * 
- * 61 / 62 Byte fehler in req_data
- * 
- * 
- * 
- * 
- * #### issing terminating char at title
- * 
- * Baustelle update_service char * / char []
+ *   get_temp string weiterarbeiten
  */
  
  

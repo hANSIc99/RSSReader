@@ -278,7 +278,7 @@ struct_news_list * load_data(char *xml_string){
 	}
 	
 	/* Position des Startzeichens holen */
-	startzeichen = get_starttag(xml_string, start_tag, &gesamtlaenge); 
+	startzeichen = get_starttag(xml_string, start_tag); 
 
 	if(DEBUG)
 	printf("\nAnfangszeichen gefunden an Stelle %d\n", startzeichen);
@@ -351,14 +351,30 @@ struct_news_list * load_data(char *xml_string){
 
 char * get_temp_string(char *xml_string, int startzeichen, int gesamtlaenge, int str_lenght){
 	int counter, m;
-	char * temp;
+	char * temp, *temp2;
+	
+	/* str_lenght = overall lenght - start-sign */
 
 	m = 0;
-	temp = (char *)malloc(str_lenght * sizeof(char));
-		for(counter = startzeichen; counter < (gesamtlaenge  /* +1 valgrind */  ); counter++){
+	temp =  malloc(str_lenght * sizeof(char));
+	temp2 = malloc(str_lenght * sizeof(char));
+	
+	/* funktioniert */
+	temp2 = xml_string + (size_t)(startzeichen  / sizeof(char)); 
+	
+	
+	
+	for(counter = startzeichen; counter < (gesamtlaenge  /* +1 valgrind */  ); counter++){
 		temp[m] = xml_string[counter];
 		m++;
 	}
+	printf("\nStartzeichen: %d\n",startzeichen);
+	printf("\nStartzeichen temp: %d\n", (size_t)temp);
+	printf("\nStartzeichen temp + startzeichen: %d\n", ((size_t)temp)+ (size_t)(startzeichen / sizeof(char)));
+	printf("\nStartzeichen temp2: %d\n", (size_t)temp2);
+	printf("\nStartadresse xml_string: %d\n", (size_t)xml_string);
+	
+	strncpy(temp2, xml_string, str_lenght);
 	return temp;
 }
 
@@ -425,39 +441,14 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 	return rss_string;
 }
 
-int get_starttag(const char * xml_string,const char * start_tag, const int *gesamtlaenge){
-int counter, string_lenght;
-uint16_t counter2;
-char * check_tag;
+int get_starttag(const char * xml_string,const char * start_tag){
 
-string_lenght = strlen(start_tag);
+uint32_t startzeichen;
 
-check_tag = malloc(string_lenght);
-if(DEBUG){
-printf("\nAnfangslänge: %lu\n", strlen(xml_string));
-}
-
-for(counter = 0; counter <  *gesamtlaenge; counter++){
-
-	for(counter2 = 0; counter2 <  strlen(start_tag) ; counter2++ ){
-		check_tag[counter2] = xml_string[counter + counter2];
-		/* printf("\nZaehler: %d\n", counter+counter2); */
-		/* printf("\nZaehler: %d\n", counter2); */
-	}
-	/* printf("\Geprüft i XXXXX %s\n", check_tag); */
-	if(strncmp(check_tag, start_tag, strlen(start_tag)) == 0 ){		
-		break;
-	}
-
-	
-
-}
-free(check_tag);
+startzeichen = (uint32_t)strstr(xml_string, start_tag) - (uint32_t)xml_string;
 if(DEBUG)
-printf("\nStartzeichen gefunden bei: %d\n", counter);
-
-
-	return counter;
+printf("\nStartzeichen gefunden bei: %d\n", startzeichen);
+return startzeichen;
 }
 
 void append(struct_news **lst, uint16_t *position, char * title, char * link, char * description){

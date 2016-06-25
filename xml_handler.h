@@ -41,7 +41,7 @@ int example3Func(const char *content, int length);
 void print_element_names(xmlNode * a_node);
 char * get_temp_string(char *xml_string, int startzeichen, int gesamtlaenge, int str_lenght);
 char * get_server_info(char *xml_string, int startzeichen);
-int get_starttag(const char * xml_string,const char * start_tag, const int *gesamtlaenge);
+int get_starttag(const char * xml_string,const char * start_tag);
 char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght);
 void append(struct_news **lst, uint16_t *position, char * title, char * link, char * description);
 
