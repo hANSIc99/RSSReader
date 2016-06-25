@@ -38,8 +38,9 @@ for(temp_pointer = (*List)->end; temp_pointer != NULL; temp_pointer = temp_point
 	if(print_flag){
 				printf("\nTitle No.: %d : %s\n", temp_pointer->position, temp_pointer->title); 
 				printf("\nLink: %s\n", temp_pointer->link);
-				if(strlen(temp_pointer->description) != 0){
-				printf("\nDescription: %s\n\n", temp_pointer->description);
+
+				if(temp_pointer->description != NULL){
+					printf("\nDescription: %s\n\n", temp_pointer->description);
 				}
 				else{
 					printf("\nDescription: No description available\n\n");
@@ -47,7 +48,7 @@ for(temp_pointer = (*List)->end; temp_pointer != NULL; temp_pointer = temp_point
 			}
 }
 	
-	
+
 }
 
 uint8_t check_for_updates(const struct_news_list *new_list,const struct_news_list *old_list,const uint16_t u16_intervall,const uint8_t u8_print_flag ){

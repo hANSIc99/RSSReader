@@ -64,16 +64,16 @@ void set_server_adress_struct(const char* domain, const char *request, struct_ad
  */
  
  
-static int handle_options(char ***argv, int *argc)
+static int handle_options(char **argv, int *argc)
 {
 	
 	/* hier prüfen wie viele adressen eingegeben wurden */
 char * svr_addr;
 
-(*argv)++;
+argv++;
 
-if(**argv != NULL){
-	svr_addr = **argv;
+if(argv != NULL){
+	svr_addr = *argv;
 
 	get_server_address(svr_addr);	
 	
@@ -89,10 +89,13 @@ void get_server_address(char* address_string){
 	uint16_t u16_sub_addr, u16_addr_lenght;
 	char *domain, *req;
 	struct_adress *rss_address;
-	rss_address = NULL;
+	
 	
 	rss_address = malloc(sizeof(struct_adress));
 	
+	/* Very important !!! */
+	
+	memset(rss_address, 0 ,sizeof(struct_adress));
 
 	
 	u16_addr_lenght = strlen(address_string);
@@ -105,7 +108,7 @@ void get_server_address(char* address_string){
 	
 	domain = (char*)malloc(u16_sub_addr * sizeof(char));
 	req = (char*)malloc((u16_addr_lenght - u16_sub_addr) * sizeof(char));
-
+	
 
 	
 	if((domain = strtok(address_string, START_SUBADDR)) != NULL){
@@ -153,17 +156,21 @@ int main(int argc, char **argv)
 	test_flag = 0;
 	List1 = NULL;
 	List2 = NULL;
+	
+	char **argv2 = argv;
+	
 	LIBXML_TEST_VERSION
+	
 	
 
 	rss_address_temp = malloc(sizeof(*rss_address_temp));
 
 	
 	
-	if((argc > 1) && (argv != NULL)){		
+	if((argc > 1) && (argv2 != NULL)){		
 		/* test if the arguments are correct */	
 		
-		test_flag = handle_options(&argv, &argc);
+		test_flag = handle_options(argv, &argc);
 		
 		
 	}
@@ -229,6 +236,10 @@ int main(int argc, char **argv)
 		
 	}
 	#endif 
+	free(rss_address_temp->s_domain);
+	free(rss_address_temp->s_request);
+	free(rss_address_temp);
+
 	return 0;
 }
 
