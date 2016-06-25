@@ -28,10 +28,6 @@
 #include <stdint.h>
 #include <time.h>
 
-#define MAX_TITLE_LENGHT 1000
-#define MAX_DESCRIPTION_LENGHT 5000
-#define MAX_LINK_LENGHT 1000
-
 #define MAX_DOMAIN_LENGHT 200
 #define MAX_REQUEST_LENGHT 500
 /* s_news = Name des Struct */

@@ -64,16 +64,10 @@ struct_news *str_ptr;
 
 if(old_list != NULL){
 	
-				printf("\nnew_list->start->title: %s\n\n", new_list->start->title);
-				printf("\nold_list->start->title: %s\n\n", old_list->start->title);
-				printf("\nresult of strcmp = %d\n", strncmp((str_ptr->title), (old_list->start->title), (strlen(new_list->start->title)) ));
-				printf("\nstrlen of new_list->start->title : %d\n" , strlen(new_list->start->title));
-				printf("\nstrlen of old_list->start->title : %d\n" , strlen(old_list->start->title));
-				printf("\nresult of strcmp = %d\n", strncmp("hallo", "hallo", 5 ));
 				
 				for(str_ptr = new_list->start ; str_ptr != NULL; str_ptr = str_ptr->next){
 			
-					if(strncmp(str_ptr->title, old_list->start->title, strnlen(str_ptr->title)) != 0){
+					if(strcmp(str_ptr->title, old_list->start->title) != 0){
 						if(u8_print_flag != 0){
 						printf("\nNew headline:\n%s\n\n", str_ptr->title);					
 										

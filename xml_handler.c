@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include "xml_handler.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define RSS_END "</rss>"
 #define RSS_START "<?xml"
 #define MARKUP_START "(<"
@@ -45,7 +45,7 @@ char *temp_link;
 
 /* Zählt wieviele Nachrichten im xml-String waren */
 uint16_t element_counter = 0;
-       
+/* List ist das erste Element, List_End das letzte */  
 struct_news *List, *List_End;
 
 int example3Func(const char *content, int length) {
