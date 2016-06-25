@@ -30,13 +30,13 @@
 #include <inttypes.h>
 #include <time.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define PRINT 1
 #define DELAY_SEC 10;
 
 #define START_SUBADDR "/"
 int delay_seconds = DELAY_SEC 
-struct_adress *rss_address_temp;
+struct_adress *rss_address_temp = NULL;
 
 void get_server_address(char* address_string);
 void set_server_adress_struct(const char* domain, const char *request, struct_adress *s_addr);
@@ -68,26 +68,28 @@ static int handle_options(char ***argv, int *argc)
 {
 	
 	/* hier prüfen wie viele adressen eingegeben wurden */
-static char * svr_addr;
-
-
+char * svr_addr;
 
 (*argv)++;
-	
-svr_addr = **argv;
 
-get_server_address(svr_addr);	
-	
-	
-	
-return 0;
+if(**argv != NULL){
+	svr_addr = **argv;
 
+	get_server_address(svr_addr);	
+	
+	return 0;
+	}
+	else
+	{
+	return 1;
+	}
 }
 
 void get_server_address(char* address_string){
 	uint16_t u16_sub_addr, u16_addr_lenght;
 	char *domain, *req;
 	struct_adress *rss_address;
+	rss_address = NULL;
 	
 	rss_address = malloc(sizeof(struct_adress));
 	
@@ -148,17 +150,17 @@ int main(int argc, char **argv)
 	uint8_t update_flag = 1;
 	uint8_t test_flag;
 	const struct_news_list *List1, *List2;
-
+	test_flag = 0;
 	List1 = NULL;
 	List2 = NULL;
 	LIBXML_TEST_VERSION
 	
-	
+
 	rss_address_temp = malloc(sizeof(*rss_address_temp));
 
 	
 	
-	if(argc > 1){		
+	if((argc > 1) && (argv != NULL)){		
 		/* test if the arguments are correct */	
 		
 		test_flag = handle_options(&argv, &argc);
@@ -198,8 +200,9 @@ int main(int argc, char **argv)
 	
 	
 	
-	
+	#if 1
 	while(1){
+		
 		if(update_flag != 0){
 	
 			update_flag = 0;
@@ -225,7 +228,7 @@ int main(int argc, char **argv)
 
 		
 	}
-	
+	#endif 
 	return 0;
 }
 

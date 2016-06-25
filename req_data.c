@@ -67,20 +67,23 @@ void *get_in_addr(struct sockaddr *sa)
 
 char *req_server(const struct_adress *rss_server)
 {
+	if(rss_server != NULL){
+	
+	
 	struct addrinfo hints,*res, *p;
 	int addr_status, sock_status, connect_status, numbytes, send_status;
 	char ipstr[INET6_ADDRSTRLEN];
 	struct sockaddr_in *port;
 	char *req;
-	uint16_t u16_str_lenght;
+	char *req1 = REQ1;
+	char *req2 = REQ2;
+	char *req3 = REQ3;
+	uint16_t u16_str_lenght = 0;
+	
 
-#if 0
-printf("\nDomain req_data: %s", rss_server->s_domain);
-printf("\nRequest req_data: %s", rss_server->s_request);
-#endif
 
- /* temp = (char *)malloc(str_lenght * sizeof(char)); */
-	u16_str_lenght = strlen(REQ1) + strlen(REQ2) + strlen(REQ3) + strlen(rss_server->s_domain) + strlen(rss_server->s_request);
+	/* Ther terminating  \0 character must be added to the size in [byte] */
+	u16_str_lenght = strlen(req1) + strlen(req2) + strlen(req3) + strlen(rss_server->s_domain) + strlen(rss_server->s_request) +1;
 	#if 0
 	printf("\n string gesamt lenght: %d\n", u16_str_lenght);
 	printf("\n 1 lenght: %d\n", strlen(REQ1));
@@ -91,11 +94,12 @@ printf("\nRequest req_data: %s", rss_server->s_request);
 	#endif
 	req = (char*)malloc(u16_str_lenght * sizeof(char));
 	
-	strcpy(req, REQ1);
+	strcpy(req, req1);
 	strcat(req, rss_server->s_request);
-	strcat(req, REQ2);
+	strcat(req, req2);
 	strcat(req, rss_server->s_domain);
-	strcat(req, REQ3);
+	strcat(req, req3);
+
 	
 	#if 0
 	printf("\n\nkompletter String: %s\n", req);
@@ -282,8 +286,8 @@ break;
 	/* res wurde mit alloc initialisiert und kann jetzt gelöscht werden  */
 	freeaddrinfo(res);	 
 
-		 /* Ther terminating  \0 character must be added to the size in [byte] */
-	 	 if((send_status = send(sock_status, req, u16_str_lenght+1, 0)) != (u16_str_lenght+1)){
+		 
+	 	 if((send_status = send(sock_status, req, u16_str_lenght, 0)) != (u16_str_lenght)){
 		
 		 fprintf(stderr, "\nERROR: send() #1 FEHLGESCHLAGEN: Nachrichtenlänge: %d, gesendet %d\n", (u16_str_lenght+1), send_status);
 		
@@ -331,5 +335,9 @@ break;
 	
 
 	return buf;
+}
+else{
+	return NULL;
+}
 }
 

@@ -35,9 +35,9 @@ typedef struct  s_news{
 	
 	uint16_t position;
 	
-    char *title;
-    char *description;
-    char *link;
+    const char *title;
+    const char *description;
+    const char *link;
     
 
     struct s_news *next;

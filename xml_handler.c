@@ -84,7 +84,7 @@ int example3Func(const char *content, int length) {
      *have been allocated by the parser.
      */
     xmlCleanupParser();
-	
+
 	return 0;
 }
 
@@ -133,7 +133,7 @@ void print_element_names(xmlNode * a_node)
 					else{
 						if(DEBUG)
 						printf("\nTitle-array will be set to NULL");
-						temp_title[0] = '\0';
+						temp_title = NULL;
 					}	
 				}		
 			}
@@ -155,8 +155,8 @@ void print_element_names(xmlNode * a_node)
 					}
 					else{
 						if(DEBUG)
-						printf("\nLink-array will be set to 0");
-						temp_link[0] = '\0';
+						printf("\nLink-array will be set to NULL");
+						temp_link = NULL;
 					}					
 				}	
 						
@@ -170,45 +170,59 @@ void print_element_names(xmlNode * a_node)
 				if(strncmp((char*)cur_node->parent->name, item_name, item_size) == 0){
 					char * clean_string, *markup_start;
 					int startzeichen, string_lenght, counter;
-					
+					startzeichen = 0;
 					markup_start = MARKUP_START;
 									
 				/* test if there is a cripple xml tag */
 				if(cur_node->children != NULL){					
 					
-					string_lenght = strlen((char*)cur_node->children->content);
+					
 					#if 0
 					raw_string = malloc(string_lenght * sizeof(char) /* valgrind */);
 					raw_string = (char*)cur_node->children->content;
 					#endif 
 
 					/* test if it is markup in the string */
-					startzeichen = get_starttag((char*)&cur_node->children->content /* valgrind raw_string */, markup_start, &string_lenght);
 					
+					#if 1
 					if(DEBUG)
-					printf("\nStartzeichen gefunden bei %d\n\n", startzeichen);
+					printf("\nSTRSTR: %s: %d\n",temp_title, (strstr(cur_node->children->content, markup_start) - (char*)&cur_node->children->content )) ;
+					#endif
 					
-					clean_string = malloc((startzeichen+1) * sizeof(char) /* valgrind */);
-					for(counter = 0; counter < startzeichen; counter++){
-					
-						clean_string[counter] = cur_node->children->content[counter];
+					startzeichen = strstr(cur_node->children->content, markup_start) - (char*)&cur_node->children->content;
+					if(startzeichen > 0){
+						if(DEBUG)
+						printf("\nStartzeichen gefunden bei: %d\n", startzeichen);
+						clean_string = malloc((startzeichen+1) * sizeof(char) /* valgrind */);
+						strncpy(clean_string, cur_node->children->content,startzeichen);
+						
 					}
+					else {
+						if(DEBUG)
+						printf("\nStartzeichen ist null oder kleiner als null: %d\n", startzeichen);
+						
+						string_lenght = strlen((char*)cur_node->children->content);
+					
+						clean_string = malloc((string_lenght+1) * sizeof(char) /* valgrind */);
+						
+						strncpy(clean_string, cur_node->children->content, string_lenght);
+						clean_string[string_lenght] = '\0' ;
+					}
+					
 
+					
+					/* strncpy(clean_string, cur_node->children->content, startzeichen); */
 					if(READ)
 					printf("Description [%d]: %s\n\n\n\n",element_counter, clean_string);
-					
-					/* BAUSTELLE */
-					/* Hier muss ich mir was ausdenken falls der String zu lang ist */
-					
-	
-					free(clean_string);
+			
 				
-					temp_description = strndup(clean_string, startzeichen);
+					temp_description = clean_string;
+					
 				}
 				else{
-					if(DEBUG)
-					printf("\nDescription-array will be set to NULL - no content available\n");
-					temp_description[0] = '\0' ;
+					
+					
+					temp_description = NULL;
 	
 					
 				}
@@ -320,6 +334,8 @@ struct_news_list * load_data(char *xml_string){
 		free(rss_string); 
 		lists->start = List;
 		lists->end = List_End;
+		
+
 		if(DEBUG)
 		printf("\nexamplefunc succeed\n");
 		return lists;
@@ -513,6 +529,9 @@ printf("\nappend(): adress of struct: %lu, position: %d\n", (long unsigned int)*
 	
 	*lst = new_element;  
 	 List_End = new_element;
+	 
+	
+	 
 if(DEBUG)
 printf("\nappend(): Leaving append()n"); 
 }
