@@ -20,7 +20,7 @@
  * 
  * 
  */
-
+#define POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
 #include "req_data.h"
@@ -30,7 +30,7 @@
 #include <inttypes.h>
 #include <time.h>
 
-#define DEBUG 0
+#define DEBUG 1
 #define PRINT 1
 #define DELAY_SEC 10;
 

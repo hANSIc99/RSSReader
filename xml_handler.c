@@ -24,22 +24,23 @@
 #include <stdint.h>
 #include "xml_handler.h"
 
-#define DEBUG 0
+#define DEBUG 1
 #define RSS_END "</rss>"
 #define RSS_START "<?xml"
 #define MARKUP_START "(<"
 #define READ 0
 
-   
+char *strndup(const char *s, size_t n);
+ 
 char* item_name = "item";
 char* title_name = "title";
 char* link_name = "link";
 char* description_name = "description";
 
 
-char temp_title[MAX_TITLE_LENGHT];
-char temp_description[MAX_DESCRIPTION_LENGHT];
-char temp_link[MAX_LINK_LENGHT];
+char *temp_title;
+char *temp_description;
+char *temp_link;
 
 
 /* Zählt wieviele Nachrichten im xml-String waren */
@@ -49,6 +50,8 @@ struct_news *List, *List_End;
 
 int example3Func(const char *content, int length) {
 
+
+	
 	xmlDocPtr doc; /* the resulting document tree */
     xmlNode *root_element = NULL;
     
@@ -65,15 +68,11 @@ int example3Func(const char *content, int length) {
         fprintf(stderr, "Failed to parse document\n");
 	return 1;
     }
-  
+   
 	root_element = xmlDocGetRootElement(doc);
 	
 	element_counter = 0;
-	
-	memset(temp_link, 0, (sizeof temp_link[0] * MAX_LINK_LENGHT));
-	memset(temp_title, 0, (sizeof temp_title[0] * MAX_TITLE_LENGHT));
-	memset(temp_description, 0, (sizeof temp_description[0] * MAX_DESCRIPTION_LENGHT));
-	
+
     print_element_names(root_element);
     
     
@@ -126,9 +125,9 @@ void print_element_names(xmlNode * a_node)
 						printf("Title [%d]: %s\n\n", element_counter, cur_node->children->content);
 					
 						/* Es wird immer wieder die Startadresse übergeben */
-					
-						strcpy(temp_title, (char*)cur_node->children->content);
-						temp_title[MAX_TITLE_LENGHT -1] = '\0';
+						
+
+						temp_title = strdup((char*)cur_node->children->content);
 					
 					}
 					else{
@@ -151,9 +150,8 @@ void print_element_names(xmlNode * a_node)
 						
 						if(READ)
 						printf("Link [%d]: %s\n\n",element_counter, cur_node->children->content);
-					
-						temp_link[MAX_LINK_LENGHT -1] = '\0' ; 	
-						strncpy(temp_link,(char*) cur_node->children->content, MAX_LINK_LENGHT-1); 
+										
+						temp_link = strdup((char*) cur_node->children->content);
 					}
 					else{
 						if(DEBUG)
@@ -201,9 +199,11 @@ void print_element_names(xmlNode * a_node)
 					
 					/* BAUSTELLE */
 					/* Hier muss ich mir was ausdenken falls der String zu lang ist */
-					strncpy(temp_description, clean_string, startzeichen+1);
+					
+	
 					free(clean_string);
-					temp_description[startzeichen] = '\0' ; 
+				
+					temp_description = strndup(clean_string, startzeichen);
 				}
 				else{
 					if(DEBUG)
@@ -214,6 +214,7 @@ void print_element_names(xmlNode * a_node)
 				}
 					
 					append(&List, &element_counter, temp_title, temp_link, temp_description);
+
 				}	
 						
 			}
@@ -320,14 +321,14 @@ struct_news_list * load_data(char *xml_string){
 		lists->start = List;
 		lists->end = List_End;
 		if(DEBUG)
-		printf("examplefunc succeed\n");
+		printf("\nexamplefunc succeed\n");
 		return lists;
 	}
 	else {
 		free(rss_string); 
 		free(lists);
 		if(DEBUG)
-		printf("examplefunc failed\n");
+		printf("\nexamplefunc failed\n");
 		return NULL;
 	}
 }
@@ -498,10 +499,11 @@ printf("\nappend(): adress of struct: %lu, position: %d\n", (long unsigned int)*
 	/* Speicher reservieren: Pointer soll auf einen freien Bereich im Speicher zeigen */
 	
 	new_element->position = *position;
- 		
-	strcpy(new_element->title, title);
-	strcpy(new_element->link, link);
-	strcpy(new_element->description, description); 
+
+	new_element->title = title;
+	new_element->link = link;
+	new_element->description = description;
+	
 	new_element->next = NULL; /* Das aktuelle Element ist das Ende der Liste */
 
 

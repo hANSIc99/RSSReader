@@ -39,9 +39,9 @@ typedef struct  s_news{
 	
 	uint16_t position;
 	
-    char title[MAX_TITLE_LENGHT];
-    char description[MAX_DESCRIPTION_LENGHT];
-    char link[MAX_LINK_LENGHT];
+    char *title;
+    char *description;
+    char *link;
     
 
     struct s_news *next;
