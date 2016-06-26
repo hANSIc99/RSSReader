@@ -126,7 +126,6 @@ void print_element_names(xmlNode * a_node)
 					
 						/* Es wird immer wieder die Startadresse übergeben */
 						
-
 						temp_title = strdup((char*)cur_node->children->content);
 					
 					}
@@ -169,32 +168,23 @@ void print_element_names(xmlNode * a_node)
 			
 				if(strncmp((char*)cur_node->parent->name, item_name, item_size) == 0){
 					char * clean_string, *markup_start;
-					int startzeichen, string_lenght, counter;
+					int startzeichen, string_lenght;
 					startzeichen = 0;
 					markup_start = MARKUP_START;
 									
 				/* test if there is a cripple xml tag */
 				if(cur_node->children != NULL){					
-					
-					
-					#if 0
-					raw_string = malloc(string_lenght * sizeof(char) /* valgrind */);
-					raw_string = (char*)cur_node->children->content;
-					#endif 
+
 
 					/* test if it is markup in the string */
+
 					
-					#if 1
-					if(DEBUG)
-					printf("\nSTRSTR: %s: %d\n",temp_title, (strstr(cur_node->children->content, markup_start) - (char*)&cur_node->children->content )) ;
-					#endif
-					
-					startzeichen = strstr(cur_node->children->content, markup_start) - (char*)&cur_node->children->content;
+					startzeichen = strstr((char*)cur_node->children->content, markup_start) - (char*)&cur_node->children->content;
 					if(startzeichen > 0){
 						if(DEBUG)
 						printf("\nStartzeichen gefunden bei: %d\n", startzeichen);
 						clean_string = malloc((startzeichen+1) * sizeof(char) /* valgrind */);
-						strncpy(clean_string, cur_node->children->content,startzeichen);
+						strncpy(clean_string, (char*)cur_node->children->content,startzeichen);
 						
 					}
 					else {
@@ -205,7 +195,7 @@ void print_element_names(xmlNode * a_node)
 					
 						clean_string = malloc((string_lenght+1) * sizeof(char) /* valgrind */);
 						
-						strncpy(clean_string, cur_node->children->content, string_lenght);
+						strncpy(clean_string, (char*)cur_node->children->content, string_lenght);
 						clean_string[string_lenght] = '\0' ;
 					}
 					
@@ -299,7 +289,7 @@ struct_news_list * load_data(char *xml_string){
 
 	/* String temp mit XML-Daten erzeugen */
 
-	temp = get_temp_string(xml_string, startzeichen, gesamtlaenge, str_lenght);
+	temp = get_temp_string(xml_string, startzeichen, str_lenght);
 	
 	
 	/* String server_info mit den am Anfang gesendeten Serverdaten erzeugen */
@@ -349,7 +339,7 @@ struct_news_list * load_data(char *xml_string){
 	}
 }
 
-char * get_temp_string(char *xml_string, int startzeichen, int gesamtlaenge, int str_lenght){
+char * get_temp_string(char *xml_string, int startzeichen, int str_lenght){
 	
 	char *temp2, *temp3;
 	
@@ -404,10 +394,8 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 	/* endgültiger String wird erstellt, Ende (unbrauchbar) wird entfernt */
 	rss_string = malloc((rss_lenght+1) * sizeof(char));
 	
-	for(counter = 0; counter < rss_lenght; counter++){
+	strncpy(rss_string, temp_string, rss_lenght);
 	
-		rss_string[counter] = temp_string[counter];
-	}
 	/* Das letzte Zeichen muss manuel auf \0 gesetzt werden */
 	rss_string[rss_lenght] = '\0' ;
 	if(DEBUG)
@@ -418,11 +406,11 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 
 int get_starttag(const char * xml_string,const char * start_tag){
 
-uint32_t startzeichen;
+size_t startzeichen;
 
-startzeichen = (uint32_t)strstr(xml_string, start_tag) - (uint32_t)xml_string;
+startzeichen = (size_t)strstr(xml_string, start_tag) - (size_t)xml_string;
 if(DEBUG)
-printf("\nStartzeichen gefunden bei: %d\n", startzeichen);
+printf("\nStartzeichen gefunden bei: %lu\n", startzeichen);
 return startzeichen;
 }
 

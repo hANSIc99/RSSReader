@@ -68,15 +68,27 @@ if(old_list != NULL){
 				
 				for(str_ptr = new_list->start ; str_ptr != NULL; str_ptr = str_ptr->next){
 			
+				if(DEBUG)
+				printf("\nresult of strcmp = %d\n", strncmp((str_ptr->title), (old_list->start->title), (strlen(new_list->start->title)) ));
+
+			
+			
+			
 					if(strcmp(str_ptr->title, old_list->start->title) != 0){
+						
 						if(u8_print_flag != 0){
-						printf("\nNew headline:\n%s\n\n", str_ptr->title);					
-										
-						printf("\nLink: %s\n", str_ptr->link);
-						if(strlen(str_ptr->description) != 0){
-							printf("\nDescription: %s\n\n", str_ptr->description);
-						}
+							
+							if(str_ptr->title != NULL)
+							printf("\nNew headline:\n%s\n\n", str_ptr->title);					
+							if(str_ptr->link != NULL)			
+							printf("\nLink: %s\n", str_ptr->link);
+							if(str_ptr->description != NULL){
+								printf("\nDescription: %s\n\n", str_ptr->description);
+							}
 					}
+					#if 0
+					exit(1);
+					#endif
 					}
 					else{
 						#if 0
