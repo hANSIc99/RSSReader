@@ -267,8 +267,10 @@ struct_news_list * load_data(char *xml_string){
 		}
 	}
 	
-	/* Position des Startzeichens holen */
-	startzeichen = get_starttag(xml_string, start_tag); 
+	/* Position des Startzeichens im array holen */
+	startzeichen = get_starttag(xml_string, start_tag);
+	
+	 
 
 	if(DEBUG)
 	printf("\nAnfangszeichen gefunden an Stelle %d\n", startzeichen);
@@ -340,13 +342,13 @@ struct_news_list * load_data(char *xml_string){
 }
 
 char * get_temp_string(char *xml_string, int startzeichen, int str_lenght){
-	
+	/* str_lenght = neue länge */
 	char *temp2, *temp3;
 	
 	/* str_lenght = overall lenght - start-sign */
 
-	temp2 = malloc(str_lenght * sizeof(char));
-	temp3 = xml_string + (size_t)(startzeichen  / sizeof(char));
+	temp2 = malloc((str_lenght+1) * sizeof(char));
+	temp3 = xml_string + (size_t)((startzeichen)  / sizeof(char));
 	
 	strcpy(temp2, temp3);
 	return temp2;
@@ -379,7 +381,7 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 		for(counter = *str_lenght; counter > 0 ; counter--){
 		
 
-		strcpy(check_tag, temp_string + (size_t)(counter-tag_lenght));
+		strncpy(check_tag, temp_string + (size_t)(counter-tag_lenght), tag_lenght);
 		
 		/* Vergleichen ob end_tag und check_tag übereinstimmen */
 		if(strncmp(check_tag, end_tag, tag_lenght) == 0){
@@ -393,7 +395,7 @@ char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght){
 	free(check_tag);
 	/* endgültiger String wird erstellt, Ende (unbrauchbar) wird entfernt */
 	rss_string = malloc((rss_lenght+1) * sizeof(char));
-	
+	memset(rss_string, 0 ,sizeof(rss_lenght+1));
 	strncpy(rss_string, temp_string, rss_lenght);
 	
 	/* Das letzte Zeichen muss manuel auf \0 gesetzt werden */
