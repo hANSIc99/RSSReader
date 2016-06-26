@@ -88,8 +88,8 @@ void get_server_address(char* address_string){
 	if(DEBUG)
 	printf("\n\nStarttag at %d\n", u16_sub_addr);
 	
-	domain = (char*)malloc(u16_sub_addr * sizeof(char));
-	req = (char*)malloc((u16_addr_lenght - u16_sub_addr) * sizeof(char));
+	domain = malloc(u16_sub_addr * sizeof(char));
+	req = malloc((u16_addr_lenght - u16_sub_addr) * sizeof(char));
 	
 
 	
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 	List1 = NULL;
 	List2 = NULL;
 	
-	char **argv2 = argv;
+
 	
 	LIBXML_TEST_VERSION
 	
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
 	
 	
-	if((argc > 1) && (argv2 != NULL)){		
+	if((argc > 1) && (argv != NULL)){		
 		/* test if the arguments are correct */	
 		
 		test_flag = handle_options(argv, &argc);
