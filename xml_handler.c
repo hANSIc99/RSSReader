@@ -350,7 +350,7 @@ char * get_temp_string(char *xml_string, int startzeichen, int str_lenght){
 	temp2 = malloc((str_lenght+1) * sizeof(char));
 	temp3 = xml_string + (size_t)((startzeichen)  / sizeof(char));
 	
-	strcpy(temp2, temp3);
+	strncpy(temp2, temp3, (str_lenght+1));
 	return temp2;
 }
 
