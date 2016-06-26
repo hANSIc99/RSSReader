@@ -145,7 +145,7 @@ int main(int argc, char **argv)
 	
 	
 
-	rss_address_temp = malloc(sizeof(*rss_address_temp));
+	rss_address_temp = malloc(sizeof(struct_adress));
 
 	
 	
