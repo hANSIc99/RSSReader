@@ -490,14 +490,15 @@ printf("\nappend(): adress of struct: %lu, position: %d\n", (long unsigned int)*
 	if(*position == 1){
 		printf("\nerstes element: %s\n", title);
 		List_Begin = new_element;
+		
 	}
 	
 	/* *lst = Adresse = new_element */
 	
 	/* Hier stimmt was nicht */
-	 
+
 	*lst = new_element;
-	
+
 	 List_End = new_element;
 	 
 	printf("Elemnt nummer : %d\n", (*lst)->position);
