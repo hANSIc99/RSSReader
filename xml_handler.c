@@ -46,7 +46,7 @@ char *temp_link;
 /* Zählt wieviele Nachrichten im xml-String waren */
 uint16_t element_counter = 0;
 /* List ist das erste Element, List_End das letzte */  
-struct_news *List, *List_End;
+struct_news *List, *List_End, *List_Begin;
 
 int example3Func(const char *content, int length) {
 
@@ -330,6 +330,11 @@ struct_news_list * load_data(char *xml_string){
 
 		if(DEBUG)
 		printf("\nexamplefunc succeed\n");
+		
+		printf("\nRückggabe: List_Begin title = %s\n", List_Begin->title);
+		printf("\nRückggabe: List_End title = %s\n", List_End->title);
+		printf("\nRückggabe: List title = %s  + %d\n", List->title, List->position);
+		
 		return lists;
 	}
 	else {
@@ -444,7 +449,9 @@ new_element = malloc(sizeof(*new_element));
 
 
 /* lst wird durchgeschaltet und der Inhalt geprüft */
+
 new_element->previous = NULL;
+
 while(*lst != NULL){
 	
 	/* *lst = ursprünglicher pointer */
@@ -461,7 +468,9 @@ while(*lst != NULL){
 	/* Erst wenn *lst = NULL ist, wird die while-Schleife verlassen */
 	/* lst(Adresse des Struct-Pointers) = (Adresse des Struct Element)->(Ponter auf nächstes Element) */
 	/* Inhalt des Zielstruct geht hier nur weil != NULL */
-	lst = &(*lst)->next; 
+	
+	lst = &((*lst)->next); 
+
 	/* wenn *lst auf NULL zeigt(kein Inhalt vorhanden), zeigt lst auch auf das nächste Element (NULL) und die while-schleife wird verlassen */
 	/* Nullpointer! */
 }	
@@ -478,14 +487,20 @@ printf("\nappend(): adress of struct: %lu, position: %d\n", (long unsigned int)*
 	
 	new_element->next = NULL; /* Das aktuelle Element ist das Ende der Liste */
 
-
+	if(*position == 1){
+		printf("\nerstes element: %s\n", title);
+		List_Begin = new_element;
+	}
 	
 	/* *lst = Adresse = new_element */
 	
+	/* Hier stimmt was nicht */
+	 
+	*lst = new_element;
 	
-	*lst = new_element;  
 	 List_End = new_element;
 	 
+	printf("Elemnt nummer : %d\n", (*lst)->position);
 	
 	 
 if(DEBUG)

@@ -139,8 +139,8 @@ int main(int argc, char **argv)
 	List1 = NULL;
 	List2 = NULL;
 	
-
-	
+	struct_news * tmp_ptr;
+	int tmp_count = 0;
 	LIBXML_TEST_VERSION
 	
 	
@@ -195,12 +195,20 @@ int main(int argc, char **argv)
 		if(update_flag != 0){
 	
 			update_flag = 0;
+			
 			if(DEBUG)		
 			printf("\nFirst Test");
 			
 			List2 = load_data(req_server(rss_address_temp));
 
 			check_for_updates(List2, List1, delay_seconds, PRINT);
+			#if 1
+			for(tmp_ptr = List1->start; tmp_ptr != NULL; tmp_ptr = tmp_ptr->next){
+				tmp_count++;
+				printf("\nTMP Count: %d    Title: %s\n", tmp_count, tmp_ptr->title);
+			}
+			tmp_count = 0;
+			#endif
 
 		}
 	
