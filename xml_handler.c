@@ -30,8 +30,6 @@
 #define MARKUP_START "(<"
 #define READ 0
 
-char *strndup(const char *s, size_t n);
- 
 char* item_name = "item";
 char* title_name = "title";
 char* link_name = "link";
@@ -45,10 +43,9 @@ char *temp_link;
 
 /* Zählt wieviele Nachrichten im xml-String waren */
 uint16_t element_counter = 0;
-/* List ist das erste Element, List_End das letzte */  
-struct_news *List, *List_End, *List_Begin;
 
-int example3Func(const char *content, int length) {
+
+int dom_parser(const char *content, int length, struct_news_list *list_ptr) {
 
 
 	
@@ -73,7 +70,7 @@ int example3Func(const char *content, int length) {
 	
 	element_counter = 0;
 
-    print_element_names(root_element);
+    get_dom_objects(root_element, list_ptr);
     
     
         /*free the document */
@@ -88,7 +85,7 @@ int example3Func(const char *content, int length) {
 	return 0;
 }
 
-void print_element_names(xmlNode * a_node)
+void get_dom_objects(xmlNode * a_node, struct_news_list *list_ptr)
 {
     xmlNode *cur_node = NULL;
 	
@@ -217,7 +214,7 @@ void print_element_names(xmlNode * a_node)
 					
 				}
 					
-					append(&List, &element_counter, temp_title, temp_link, temp_description);
+					append(&(list_ptr->start), &element_counter, temp_title, temp_link, temp_description, list_ptr);
 
 				}	
 						
@@ -226,7 +223,7 @@ void print_element_names(xmlNode * a_node)
         }		
 
 		/* REKURSIVE FUNKTION! */
-        print_element_names(cur_node->children); 
+        get_dom_objects(cur_node->children, list_ptr);
         /* Ende for-Schleife */
     }
 }
@@ -244,13 +241,14 @@ struct_news_list * load_data(char *xml_string){
 	 char * server_info;
 	 char * rss_string; 
 	 struct_news_list *lists;
+	 
 	 lists = malloc(sizeof(*lists));
 	 
+		
+		
+	lists->start = NULL;
+	lists->end = NULL;	
 
-	 if(DEBUG){
-	 printf("\nload_data(): Adresse auf die List zeigt: %lu\n\n",(long unsigned int) List);
-	 printf("\nload_data(): Adresse von List selbst: %lu\n\n", (long unsigned int) &List);  
-	 }
 	
 	 
 	 if(DEBUG)
@@ -321,19 +319,21 @@ struct_news_list * load_data(char *xml_string){
 	}
 	#endif
 	
-	if((example3Func(rss_string, (strlen(rss_string)))) == 0){ 
+	if((dom_parser(rss_string, (strlen(rss_string)), lists)) == 0){ 
 		
 		free(rss_string); 
+		#if 0
 		lists->start = List;
 		lists->end = List_End;
-		
+		#endif
 
 		if(DEBUG)
 		printf("\nexamplefunc succeed\n");
 		
-		printf("\nRückggabe: List_Begin title = %s\n", List_Begin->title);
-		printf("\nRückggabe: List_End title = %s\n", List_End->title);
-		printf("\nRückggabe: List title = %s  + %d\n", List->title, List->position);
+		#if 0
+		printf("\nRückggabe: lists->start title = %s\n", lists->start->title);
+		printf("\nRückggabe: lists->end-> title = %s\n", lists->end->title);
+		#endif
 		
 		return lists;
 	}
@@ -421,7 +421,7 @@ printf("\nStartzeichen gefunden bei: %lu\n", startzeichen);
 return startzeichen;
 }
 
-void append(struct_news **lst, uint16_t *position, char * title, char * link, char * description){
+void append(struct_news **lst, uint16_t *position, char * title, char * link, char * description, struct_news_list *list_ptr){
 
 struct_news *ref_ptr, *new_element;
 
@@ -487,21 +487,14 @@ printf("\nappend(): adress of struct: %lu, position: %d\n", (long unsigned int)*
 	
 	new_element->next = NULL; /* Das aktuelle Element ist das Ende der Liste */
 
-	if(*position == 1){
-		printf("\nerstes element: %s\n", title);
-		List_Begin = new_element;
-		
-	}
-	
 	/* *lst = Adresse = new_element */
 	
 	/* Hier stimmt was nicht */
 
 	*lst = new_element;
 
-	 List_End = new_element;
-	 
-	printf("Elemnt nummer : %d\n", (*lst)->position);
+	 list_ptr->end = new_element;
+	
 	
 	 
 if(DEBUG)

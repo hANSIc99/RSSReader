@@ -33,6 +33,7 @@ void initial_update(const struct_news_list **List, uint8_t print_flag){
 struct_news  *temp_pointer; 
 	
 
+
 for(temp_pointer = (*List)->end; temp_pointer != NULL; temp_pointer = temp_pointer->previous){
 	
 	if(print_flag){
@@ -47,7 +48,7 @@ for(temp_pointer = (*List)->end; temp_pointer != NULL; temp_pointer = temp_point
 				}
 			}
 }
-	
+
 
 }
 

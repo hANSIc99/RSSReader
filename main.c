@@ -135,12 +135,14 @@ int main(int argc, char **argv)
 	uint8_t update_flag = 1;
 	uint8_t test_flag;
 	const struct_news_list *List1, *List2;
+	struct_news * tmp_ptr;
 	test_flag = 0;
 	List1 = NULL;
 	List2 = NULL;
 	
-	struct_news * tmp_ptr;
+	
 	int tmp_count = 0;
+	
 	LIBXML_TEST_VERSION
 	
 	
@@ -206,8 +208,14 @@ int main(int argc, char **argv)
 			for(tmp_ptr = List1->start; tmp_ptr != NULL; tmp_ptr = tmp_ptr->next){
 				tmp_count++;
 				printf("\nTMP Count: %d    Title: %s\n", tmp_count, tmp_ptr->title);
+				free(tmp_ptr->title);
+				free(tmp_ptr->description);
+				free(tmp_ptr->link);
+				free(tmp_ptr);
+				
 			}
 			tmp_count = 0;
+			free(List1);
 			#endif
 
 		}
@@ -220,6 +228,19 @@ int main(int argc, char **argv)
 			List1 = load_data(req_server(rss_address_temp));			
 			
 			check_for_updates(List1, List2, delay_seconds, PRINT);
+						#if 1
+			for(tmp_ptr = List2->start; tmp_ptr != NULL; tmp_ptr = tmp_ptr->next){
+				tmp_count++;
+				printf("\nTMP Count: %d    Title: %s\n", tmp_count, tmp_ptr->title);
+				free(tmp_ptr->title);
+				free(tmp_ptr->description);
+				free(tmp_ptr->link);
+				free(tmp_ptr);
+				
+			}
+			tmp_count = 0;
+			#endif
+			free(List2);
 			
 		}
 
