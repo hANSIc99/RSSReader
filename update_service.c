@@ -59,21 +59,13 @@ uint16_t delay_connection_lost = DELAY_CON_LOST
 struct_news *str_ptr;
 
 
-	
-
-
-	
-
 if(old_list != NULL){
 	
 				
 				for(str_ptr = new_list->start ; str_ptr != NULL; str_ptr = str_ptr->next){
 			
 				if(DEBUG)
-				printf("\nresult of strcmp = %d\n", strncmp((str_ptr->title), (old_list->start->title), (strlen(new_list->start->title)) ));
-
-			
-			
+				printf("\nresult of strcmp = %d\n", strncmp((str_ptr->title), (old_list->start->title), (strlen(new_list->start->title)) ));		
 			
 					if(strcmp(str_ptr->title, old_list->start->title) != 0){
 						
