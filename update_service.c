@@ -133,4 +133,17 @@ void update_assistant(const uint16_t *milliseconds, const uint16_t *seconds) {
 
 
 }
+	
+void free_list(struct_news_list *list)
+{
+struct_news * tmp_ptr;
+for(tmp_ptr = list->start; tmp_ptr != NULL; tmp_ptr = tmp_ptr->next){
+				free(tmp_ptr->title);
+				free(tmp_ptr->description);
+				free(tmp_ptr->link);
+				free(tmp_ptr);
+				
+			}
+			free(list);
+}
 
