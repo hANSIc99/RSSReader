@@ -87,7 +87,7 @@ if(old_list != NULL){
 								printf("\nDescription: %s\n\n", str_ptr->description);
 							}
 					}
-					#if 1
+					#if 0
 					exit(1);
 					#endif
 					}
