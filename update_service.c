@@ -28,7 +28,7 @@
 #define DEBUG 0
 
 
-void initial_update(const struct_news_list **List, uint8_t print_flag){
+void initial_update(struct_news_list **List, uint8_t print_flag){
 	
 struct_news  *temp_pointer; 
 	
