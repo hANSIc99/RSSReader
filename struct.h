@@ -58,4 +58,10 @@ typedef struct s_adress {
 	char s_request[MAX_REQUEST_LENGHT];
 } struct_adress;
 
+typedef struct {
+	char *key;
+	int val;
+	
+	} type_struct;
+
 #endif

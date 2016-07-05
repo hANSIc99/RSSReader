@@ -33,17 +33,31 @@
 #define DEBUG 0
 #define PRINT 1
 #define DELAY_SEC 10;
-
 #define START_SUBADDR "/"
-int delay_seconds = DELAY_SEC struct_adress * rss_address_temp = NULL;
 
+#define A1 1
+#define A2 2
+#define A3 3
+#define A4 4
+#define BADARG -1
+#define NKEYS (sizeof(lookuptable)/sizeof(type_struct))
+
+int delay_seconds = DELAY_SEC struct_adress * rss_address_temp = NULL;
+int key_from_string(char *argv);
 void get_server_address(char *address_string);
 void set_server_adress_struct(const char *domain, const char *request,
 			      struct_adress * s_addr);
 /* todo's:
  * 
- *   get_temp string weiterarbeiten
+ *   n
  */
+
+static type_struct lookuptable[] = {
+	{"A1", A1},
+	{"A2", A2},
+	{"A3", A3},
+	{"A4", A4}
+};
 
 static int handle_options(char **argv, int *argc)
 {
@@ -54,14 +68,56 @@ static int handle_options(char **argv, int *argc)
 	argv++;
 
 	if (argv != NULL) {
+
+		/* test here for adress or option */
+#if 0
+		if (((*argv)[0]) == '-') {
+#endif
+
+			switch (key_from_string(*argv)) {
+			case A1:
+				printf("case A1\n");
+				break;
+			case A2:
+				printf("case A2\n");
+				break;
+			case A3:
+				printf("case A3\n");
+				break;
+			case A4:
+				printf("case A4\n");
+				break;
+			case BADARG:
+				printf
+				    ("RSSReader -help list available commands and a short manual\n");
+				break;
+			}
+
+#if 0
+		}
+#endif
 		svr_addr = *argv;
 
 		get_server_address(svr_addr);
 
 		return 0;
+		/* rekursive implementation */
 	} else {
 		return 1;
 	}
+}
+
+int key_from_string(char *argv)
+{
+	uint8_t i;
+
+	for (i = 0; i < NKEYS; i++) {
+		type_struct *typ = &lookuptable[i];
+		if (strcmp(typ->key, argv) == 0) {
+			return typ->val;
+		}
+	}
+	return BADARG;
 }
 
 void get_server_address(char *address_string)
@@ -128,7 +184,7 @@ int main(int argc, char **argv)
 	test_flag = 0;
 	List1 = NULL;
 	List2 = NULL;
-int kann3sssseg2;
+	int kann3sssseg2;
 	LIBXML_TEST_VERSION rss_address_temp = malloc(sizeof(struct_adress));
 
 	if ((argc > 1) && (argv != NULL)) {
