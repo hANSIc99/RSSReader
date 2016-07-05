@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 	test_flag = 0;
 	List1 = NULL;
 	List2 = NULL;
-int kannweg;
+int kannweg2;
 	LIBXML_TEST_VERSION rss_address_temp = malloc(sizeof(struct_adress));
 
 	if ((argc > 1) && (argv != NULL)) {
