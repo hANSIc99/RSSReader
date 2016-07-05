@@ -21,7 +21,6 @@
  * 
  */
 
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -34,25 +33,24 @@
 #include <unistd.h>
 
 #define PORT "80"
-#define MAXDATASIZE 100000 /* maximale nummer an Bytes die empfangen werden kann */
+#define MAXDATASIZE 100000	/* maximale nummer an Bytes die empfangen werden kann */
 
 #ifndef _REQ_DATA
 #define _REQ_DATA
 
 /* ohne POSIX-Compiler-Flag muss addrinfo bekannt gegeben werden */
 #if 0
-           struct addrinfo {
-               int              ai_flags;
-               int              ai_family;
-               int              ai_socktype;
-               int              ai_protocol;
-               socklen_t        ai_addrlen;
-               struct sockaddr *ai_addr;
-               char            *ai_canonname;
-               struct addrinfo *ai_next;
-           };
+struct addrinfo {
+	int ai_flags;
+	int ai_family;
+	int ai_socktype;
+	int ai_protocol;
+	socklen_t ai_addrlen;
+	struct sockaddr *ai_addr;
+	char *ai_canonname;
+	struct addrinfo *ai_next;
+};
 #endif
 void *get_in_addr(struct sockaddr *sa);
-char *req_server(const struct_adress *rss_server);
+char *req_server(const struct_adress * rss_server);
 #endif
-

@@ -21,7 +21,6 @@
  * 
  */
 
-
 #ifndef _XML_HANDLER
 #define _XML_HANDLER
 
@@ -30,21 +29,19 @@
 #include <libxml/parser.h>
 #include <libxml/xmlreader.h>
 
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "struct.h"
-struct_news_list * load_data(char *xml_string);
-int dom_parser(const char *content, int length, struct_news_list *list_ptr);
+struct_news_list *load_data(char *xml_string);
+int dom_parser(const char *content, int length, struct_news_list * list_ptr);
 
-void get_dom_objects(xmlNode * a_node, struct_news_list *list_ptr);
-char * get_temp_string(char *xml_string, int startzeichen, int str_lenght);
-char * get_server_info(char *xml_string, int startzeichen);
-int get_starttag(const char * xml_string,const char * start_tag);
-char * get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght);
-void append(struct_news **lst, uint16_t *position, char * title, char * link, char * description, struct_news_list *list_ptr);
-
-
+void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr);
+char *get_temp_string(char *xml_string, int startzeichen, int str_lenght);
+char *get_server_info(char *xml_string, int startzeichen);
+int get_starttag(const char *xml_string, const char *start_tag);
+char *get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght);
+void append(struct_news ** lst, uint16_t * position, char *title, char *link,
+	    char *description, struct_news_list * list_ptr);
 
 #endif

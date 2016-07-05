@@ -21,7 +21,6 @@
  * 
  */
 
-
 #ifndef _STRUCT_H
 #define _STRUCT_H
 
@@ -31,34 +30,32 @@
 #define MAX_DOMAIN_LENGHT 200
 #define MAX_REQUEST_LENGHT 500
 /* s_news = Name des Struct */
-typedef struct  s_news{
-	
-	uint16_t position;
-	
-    char *title;
-    char *description;
-    char *link;
-    
+typedef struct s_news {
 
-    struct s_news *next;
-    struct s_news *previous;
+	uint16_t position;
+
+	char *title;
+	char *description;
+	char *link;
+
+	struct s_news *next;
+	struct s_news *previous;
 
 } struct_news;
 /* struct_news = Name für Variablendeklaration: struct_news VarName */
 
 typedef struct s_news_list {
-	
+
 	/* Enhthät bei Nachrichten die neuste Nachricht in der Liste */
 	struct s_news *start;
 	struct s_news *end;
-	
+
 } struct_news_list;
 
-typedef struct s_adress{
-	
+typedef struct s_adress {
+
 	char s_domain[MAX_DOMAIN_LENGHT];
 	char s_request[MAX_REQUEST_LENGHT];
-}
-struct_adress;	
+} struct_adress;
 
 #endif

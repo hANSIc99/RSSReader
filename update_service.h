@@ -20,7 +20,7 @@
  * 
  * 
  */
- 
+
 #ifndef _UPDATE_SERVICE_H
 #define _UPDATE_SERVICE_H
 
@@ -29,10 +29,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-void update_assistant(const uint16_t *milliseconds, const uint16_t *seconds);
-void initial_update(struct_news_list **List, uint8_t print_flag);
-uint8_t check_for_updates(const struct_news_list *new_list,const struct_news_list *old_list, const uint16_t u16_intervall,const uint8_t u8_print_flag );
-void free_list(struct_news_list *list);
-
+void update_assistant(const uint16_t * milliseconds, const uint16_t * seconds);
+void initial_update(struct_news_list ** List, uint8_t print_flag);
+uint8_t check_for_updates(const struct_news_list * new_list,
+			  const struct_news_list * old_list,
+			  const uint16_t u16_intervall,
+			  const uint8_t u8_print_flag);
+void free_list(struct_news_list * list);
 
 #endif
