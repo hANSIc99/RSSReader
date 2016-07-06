@@ -20,6 +20,20 @@
  * 
  * 
  */
+ 
+/*! \file main.c
+ *  \brief From here all other functions are called
+ * 
+ * In the while loop of the main function, all 40 seconds an update of the 
+ * news-list is requested and compared to the outdated one.
+ */ 
+
+/*! \fn int key_from_string(char *argv)
+    \brief Compares the arguments.
+    \param *argv The name of the descriptor.
+
+*/
+ 
 #define POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
@@ -186,6 +200,12 @@ int main(int argc, char **argv)
 	List2 = NULL;
 	int kann3sssseg2;
 	LIBXML_TEST_VERSION rss_address_temp = malloc(sizeof(struct_adress));
+	
+	printf("RSSReader  Copyright (C) 2016  Stephan Avenwedde
+
+    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; type `show c' for details.")
 
 	if ((argc > 1) && (argv != NULL)) {
 		/* test if the arguments are correct */
