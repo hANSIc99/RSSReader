@@ -115,14 +115,15 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 							printf
 							    ("Title [%d]: %s\n\n",
 							     element_counter,
-							     cur_node->
-							     children->content);
+							     cur_node->children->
+							     content);
 
 						/* Es wird immer wieder die Startadresse übergeben */
 
 						temp_title =
-						    strdup((char *)cur_node->
-							   children->content);
+						    strdup((char *)
+							   cur_node->children->
+							   content);
 
 					} else {
 						if (DEBUG)
@@ -151,12 +152,13 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 							printf
 							    ("Link [%d]: %s\n\n",
 							     element_counter,
-							     cur_node->
-							     children->content);
+							     cur_node->children->
+							     content);
 
 						temp_link =
-						    strdup((char *)cur_node->
-							   children->content);
+						    strdup((char *)
+							   cur_node->children->
+							   content);
 					} else {
 						if (DEBUG)
 							printf
@@ -188,11 +190,13 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 						/* test if it is markup in the string */
 
 						startzeichen =
-						    strstr((char *)cur_node->
-							   children->content,
+						    strstr((char *)
+							   cur_node->children->
+							   content,
 							   markup_start) -
-						    (char *)&cur_node->
-						    children->content;
+						    (char *)
+						    &cur_node->children->
+						    content;
 						if (startzeichen > 0) {
 							if (DEBUG)
 								printf
@@ -204,13 +208,10 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 								    1) *
 								   sizeof(char)
 								   /* valgrind */
-								   );
+							    );
 							strncpy(clean_string,
 								(char *)
-								cur_node->
-								children->
-								content,
-								startzeichen);
+								cur_node->children->content, startzeichen);
 
 						} else {
 							if (DEBUG)
@@ -220,19 +221,14 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 
 							string_lenght =
 							    strlen((char *)
-								   cur_node->
-								   children->
-								   content);
+								   cur_node->children->content);
 
 							clean_string =
 							    malloc((string_lenght + 1) * sizeof(char) /* valgrind */ );
 
 							strncpy(clean_string,
 								(char *)
-								cur_node->
-								children->
-								content,
-								string_lenght);
+								cur_node->children->content, string_lenght);
 							clean_string
 							    [string_lenght] =
 							    '\0';
@@ -303,13 +299,12 @@ struct_news_list *load_data(char *xml_string)
 
 	/* Position des Startzeichens im array holen */
 	startzeichen = get_starttag(xml_string, start_tag);
-	
-	if((startzeichen >= gesamtlaenge) || (startzeichen <= 0)){
+
+	if ((startzeichen >= gesamtlaenge) || (startzeichen <= 0)) {
 		printf("\nServer query failed\n");
 		exit(1);
 	}
-	
-	
+
 	if (DEBUG)
 		printf("\nAnfangszeichen gefunden an Stelle %d\n",
 		       startzeichen);

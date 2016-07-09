@@ -28,8 +28,6 @@
 #include <stdlib.h>
 #include "struct.h"
 
-
-
 #define START_SUBADDR "/"
 
 #define DOM 1
@@ -39,12 +37,12 @@
 #define BADARG -1
 #define NKEYS (sizeof(lookuptable)/sizeof(type_struct))
 
-int key_from_string (char *argv);
-struct_adress ** get_server_address (char *address_string, struct_adress **addr_ptr);
-void set_server_adress_struct (const char *domain, const char *request,
-			       struct_adress * s_addr);
-void test_arg (char **argv);
-void handle_options (char **argv, int *argc, struct_adress **addr_pointer);
-
+int key_from_string(char *argv);
+struct_adress **get_server_address(char *address_string,
+				   struct_adress ** addr_ptr);
+void set_server_adress_struct(const char *domain, const char *request,
+			      struct_adress * s_addr);
+void test_arg(char **argv);
+void handle_options(char **argv, int *argc, struct_adress ** addr_pointer);
 
 #endif

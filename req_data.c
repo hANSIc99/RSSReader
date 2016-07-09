@@ -108,7 +108,6 @@ char *req_server(const struct_adress * rss_server)
 		/* char req1[] = "GET /rss/cnn_topstories.rss HTTP/1.1\nHOST: edition.cnn.com\n\n\n"; */
 		/* char req1[] = "GET /" + rss_server->s_request + "HTTP/1.1\nHOST: " + rss_server->s_domain + "\n\n\n"; */
 
-
 		/* stdio.h : speicher beschreiben; hier: Speicher nullen */
 		memset(&hints, 0, sizeof hints);
 
@@ -324,9 +323,9 @@ char *req_server(const struct_adress * rss_server)
 			       MAXDATASIZE);
 			printf("\nEmpfangende Bytes: %d\n", numbytes);
 			printf("\nEmpfangende Bytes: %d\n", numbytes);
-			#if 0
+#if 0
 			printf("\n DATEN: %s\n", buf);
-			#endif
+#endif
 		}
 		close(sock_status);
 

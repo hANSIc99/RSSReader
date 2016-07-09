@@ -61,7 +61,7 @@ typedef struct s_adress {
 typedef struct {
 	char *key;
 	int val;
-	
-	} type_struct;
+
+} type_struct;
 
 #endif
