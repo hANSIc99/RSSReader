@@ -303,7 +303,13 @@ struct_news_list *load_data(char *xml_string)
 
 	/* Position des Startzeichens im array holen */
 	startzeichen = get_starttag(xml_string, start_tag);
-
+	
+	if((startzeichen >= gesamtlaenge) || (startzeichen <= 0)){
+		printf("\nServer query failed\n");
+		exit(1);
+	}
+	
+	
 	if (DEBUG)
 		printf("\nAnfangszeichen gefunden an Stelle %d\n",
 		       startzeichen);

@@ -20,20 +20,20 @@
  * 
  * 
  */
- 
+
 /*! \file main.c
  *  \brief From here all other functions are called
  * 
  * In the while loop of the main function, all 40 seconds an update of the 
  * news-list is requested and compared to the outdated one.
- */ 
+ */
 
 /*! \fn int key_from_string(char *argv)
     \brief Compares the arguments.
     \param *argv The name of the descriptor.
 
 */
- 
+
 #define POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
@@ -43,237 +43,107 @@
 #include "update_service.h"
 #include <inttypes.h>
 #include <time.h>
-
+#include "text.h"
+#include "cmd_args.h"
 #define DEBUG 0
 #define PRINT 1
-#define DELAY_SEC 10;
-#define START_SUBADDR "/"
+#define DELAY_SEC 10
 
-#define A1 1
-#define A2 2
-#define A3 3
-#define A4 4
-#define BADARG -1
-#define NKEYS (sizeof(lookuptable)/sizeof(type_struct))
 
-int delay_seconds = DELAY_SEC struct_adress * rss_address_temp = NULL;
-int key_from_string(char *argv);
-void get_server_address(char *address_string);
-void set_server_adress_struct(const char *domain, const char *request,
-			      struct_adress * s_addr);
+
+
+int delay_seconds = DELAY_SEC;
+
 /* todo's:
  * 
  *   n
  */
 
-static type_struct lookuptable[] = {
-	{"A1", A1},
-	{"A2", A2},
-	{"A3", A3},
-	{"A4", A4}
-};
 
-static int handle_options(char **argv, int *argc)
+int
+main (int argc, char **argv)
 {
+  struct_adress *rss_addres_options = NULL;
 
-	/* hier prüfen wie viele adressen eingegeben wurden */
-	char *svr_addr;
+  char *req_svr_ptr;
+  uint8_t update_flag = 1;
+  struct_news_list *List1, *List2;
 
-	argv++;
+  List1 = NULL;
+  List2 = NULL;
 
-	if (argv != NULL) {
+  LIBXML_TEST_VERSION 
 
-		/* test here for adress or option */
-#if 0
-		if (((*argv)[0]) == '-') {
-#endif
 
-			switch (key_from_string(*argv)) {
-			case A1:
-				printf("case A1\n");
-				break;
-			case A2:
-				printf("case A2\n");
-				break;
-			case A3:
-				printf("case A3\n");
-				break;
-			case A4:
-				printf("case A4\n");
-				break;
-			case BADARG:
-				printf
-				    ("RSSReader -help list available commands and a short manual\n");
-				break;
-			}
+handle_options(argv, &argc, &rss_addres_options);
 
-#if 0
-		}
-#endif
-		svr_addr = *argv;
 
-		get_server_address(svr_addr);
+  printf ("%s", start_licence);
 
-		return 0;
-		/* rekursive implementation */
-	} else {
-		return 1;
-	}
-}
+  if ((req_svr_ptr = req_server (rss_addres_options)) != NULL)
+    {
+      /* req_svr_ptr holds the raw data from the server */
+      if (DEBUG)
+	printf ("\nData loaded!\n");
 
-int key_from_string(char *argv)
-{
-	uint8_t i;
+      List1 = load_data (req_svr_ptr);
+    }
+  else
+    {
+      if (DEBUG)
+	printf ("\nKeine Daten vorhanden: %s\n", req_svr_ptr);
+    }
 
-	for (i = 0; i < NKEYS; i++) {
-		type_struct *typ = &lookuptable[i];
-		if (strcmp(typ->key, argv) == 0) {
-			return typ->val;
-		}
-	}
-	return BADARG;
-}
+  /* First time reading; news at last */
+  if (List1 != NULL)
+    {
 
-void get_server_address(char *address_string)
-{
-	uint16_t u16_sub_addr, u16_addr_lenght;
-	char *domain, *req;
-	struct_adress *rss_address;
+      initial_update (&List1, PRINT);
 
-	rss_address = malloc(sizeof(struct_adress));
-
-	/* Very important !!! */
-
-	memset(rss_address, 0, sizeof(struct_adress));
-
-	u16_addr_lenght = strlen(address_string);
-	if (DEBUG)
-		printf("\n\nArg 1: %s\n", address_string);
-
-	u16_sub_addr = strcspn(address_string, START_SUBADDR);
-	if (DEBUG)
-		printf("\n\nStarttag at %d\n", u16_sub_addr);
-
-	domain = malloc(u16_sub_addr * sizeof(char));
-	req = malloc((u16_addr_lenght - u16_sub_addr) * sizeof(char));
-
-	if ((domain = strtok(address_string, START_SUBADDR)) != NULL) {
-
-		if ((req = strtok(NULL, " ")) != NULL) {
-
-			set_server_adress_struct(domain, req, rss_address);
-
-		} else {
-			/* return NULL; */
-		}
-
-	}
-
-	else {
-		/* return NULL; */
-	}
-
-	rss_address_temp = rss_address;
-
-	/* return rss_address;  */
-
-}
-
-void set_server_adress_struct(const char *domain, const char *request,
-			      struct_adress * s_addr)
-{
-
-	strncpy(s_addr->s_domain, domain, strlen(domain));
-	strncpy(s_addr->s_request, request, strlen(request));
-
-}
-
-int main(int argc, char **argv)
-{
-
-	char *req_svr_ptr;
-	uint8_t update_flag = 1;
-	uint8_t test_flag;
-	struct_news_list *List1, *List2;
-	test_flag = 0;
-	List1 = NULL;
-	List2 = NULL;
-	int kann3sssseg2;
-	LIBXML_TEST_VERSION rss_address_temp = malloc(sizeof(struct_adress));
-	
-	printf("RSSReader  Copyright (C) 2016  Stephan Avenwedde
-
-    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; type `show c' for details.")
-
-	if ((argc > 1) && (argv != NULL)) {
-		/* test if the arguments are correct */
-
-		test_flag = handle_options(argv, &argc);
-
-	} else {
-		/* the user needs help */
-		printf
-		    ("RSSReader -help list available commands and a short manual\n");
-		return 1;
-	}
-
-	if ((req_svr_ptr = req_server(rss_address_temp)) != NULL) {
-		/* req_svr_ptr holds the raw data from the server */
-		if (DEBUG)
-			printf("\nData loaded!\n");
-
-		List1 = load_data(req_svr_ptr);
-	} else {
-		if (DEBUG)
-			printf("\nKeine Daten vorhanden: %s\n", req_svr_ptr);
-	}
-
-	/* First time reading; news at last */
-	if (List1 != NULL) {
-
-		initial_update(&List1, PRINT);
-
-	} else {
-		printf("\nRecall server.....\n");
-	}
+    }
+  else
+    {
+      printf ("\nRecall server.....\n");
+    }
 
 #if 1
-	while (1) {
+  while (1)
+    {
 
-		if (update_flag != 0) {
+      if (update_flag != 0)
+	{
 
-			update_flag = 0;
+	  update_flag = 0;
 
-			if (DEBUG)
-				printf("\nFirst Test");
+	  if (DEBUG)
+	    printf ("\nFirst Test");
 
-			List2 = load_data(req_server(rss_address_temp));
+	  List2 = load_data (req_server (rss_addres_options));
 
-			check_for_updates(List2, List1, delay_seconds, PRINT);
+	  check_for_updates (List2, List1, delay_seconds, PRINT);
 
-			free_list(List1);
-
-		}
-
-		else {
-			if (DEBUG)
-				printf("\nSeconds Test");
-			update_flag = 1;
-
-			List1 = load_data(req_server(rss_address_temp));
-
-			check_for_updates(List1, List2, delay_seconds, PRINT);
-			free_list(List2);
-
-		}
+	  free_list (List1);
 
 	}
-#endif
-	free(rss_address_temp->s_domain);
-	free(rss_address_temp->s_request);
-	free(rss_address_temp);
 
-	return 0;
+      else
+	{
+	  if (DEBUG)
+	    printf ("\nSeconds Test");
+	  update_flag = 1;
+
+	  List1 = load_data (req_server (rss_addres_options));
+
+	  check_for_updates (List1, List2, delay_seconds, PRINT);
+	  free_list (List2);
+
+	}
+
+    }
+#endif
+  free (rss_addres_options->s_domain);
+  free (rss_addres_options->s_request);
+  free (rss_addres_options);
+
+  return 0;
 }
