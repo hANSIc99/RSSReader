@@ -30,8 +30,8 @@ uint8_t option_counter = 0;
 static type_struct lookuptable[] = {
 	{"dom", DOM},
 	{"parser=domain-object-model", DOM_LONG},
-	{"A3", A3},
-	{"A4", A4}
+	{"XML", XML},
+	{"HTTP", HTTP}
 };
 
 void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
@@ -62,11 +62,11 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 			case DOM_LONG:
 				printf("\ncase dom_long\n");
 				break;
-			case A3:
-				printf("\ncase A3\n");
+			case XML:
+				printf("\ncase XML\n");
 				break;
-			case A4:
-				printf("\ncase A4\n");
+			case HTTP:
+				printf("\ncase HTTP\n");
 				break;
 			case BADARG:
 				printf
@@ -107,13 +107,24 @@ void test_arg(char **argv)
 int key_from_string(char *argv)
 {
 	uint8_t i;
-
+	char * str;
+	str = malloc(strlen(argv) * sizeof(char));
+	memset(str, 0, (strlen(argv) * sizeof(char)));
+	while(argv[i])
+	{
+		str[i] = toupper(argv[i]);
+		i++;
+	}
+	
+	printf("String str: %s bei i = %d\n", str, i);
 	for (i = 0; i < NKEYS; i++) {
 		type_struct *typ = &lookuptable[i];
-		if (strcmp(typ->key, argv) == 0) {
+		if (strcmp(typ->key, str) == 0) {
+			free(str);
 			return typ->val;
 		}
 	}
+	free(str);
 	return BADARG;
 }
 

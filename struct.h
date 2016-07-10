@@ -29,6 +29,11 @@
 
 #define MAX_DOMAIN_LENGHT 200
 #define MAX_REQUEST_LENGHT 500
+
+#define true 1
+#define false 0
+
+typedef uint8_t bool;
 /* s_news = Name des Struct */
 typedef struct s_news {
 
@@ -56,6 +61,13 @@ typedef struct s_adress {
 
 	char s_domain[MAX_DOMAIN_LENGHT];
 	char s_request[MAX_REQUEST_LENGHT];
+	
+	bool b_print;
+	bool b_update;
+	bool b_xml;
+	bool b_http;
+	bool b_json;
+	
 } struct_adress;
 
 typedef struct {

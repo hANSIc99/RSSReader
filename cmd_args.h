@@ -26,14 +26,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "struct.h"
+
 
 #define START_SUBADDR "/"
 
 #define DOM 1
 #define DOM_LONG 2
-#define A3 3
-#define A4 4
+#define XML 3
+#define HTTP 4
 #define BADARG -1
 #define NKEYS (sizeof(lookuptable)/sizeof(type_struct))
 

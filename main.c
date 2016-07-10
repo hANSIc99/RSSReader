@@ -53,7 +53,11 @@ int delay_seconds = DELAY_SEC;
 
 /* todo's:
  * 
- *   n
+ *   implement to upper function
+ * 
+ *   http://www.cplusplus.com/reference/cctype/toupper/
+ * 
+ * 
  */
 
 int main(int argc, char **argv)
@@ -67,7 +71,8 @@ int main(int argc, char **argv)
 	List1 = NULL;
 	List2 = NULL;
 
-	LIBXML_TEST_VERSION handle_options(argv, &argc, &rss_addres_options);
+	LIBXML_TEST_VERSION 
+	handle_options(argv, &argc, &rss_addres_options);
 
 	printf("%s", start_licence);
 
