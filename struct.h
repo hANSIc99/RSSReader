@@ -59,8 +59,8 @@ typedef struct s_news_list {
 
 typedef struct s_adress {
 
-	char s_domain[MAX_DOMAIN_LENGHT];
-	char s_request[MAX_REQUEST_LENGHT];
+	char * s_domain;
+	char * s_request;
 	
 	bool b_print;
 	bool b_update;

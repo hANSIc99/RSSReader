@@ -163,11 +163,7 @@ struct_adress
 	if (DEBUG)
 		printf("\n\nStarttag at %d\n", u16_sub_addr);
 		
-	/* implement dynamic allocation of the memory */
-	#if 0
-	domain = malloc(u16_sub_addr * sizeof(char));
-	req = malloc((u16_addr_lenght - u16_sub_addr) * sizeof(char));
-	#endif
+
 	if ((domain = strtok(address_string, START_SUBADDR)) != NULL) {
 
 		if ((req = strtok(NULL, " ")) != NULL) {
@@ -193,8 +189,8 @@ set_server_adress_struct(const char *domain,
 			 const char *request, struct_adress * s_addr)
 {
 
-	strncpy(s_addr->s_domain, domain, strlen(domain));
-	strncpy(s_addr->s_request, request, strlen(request));
+	s_addr->s_domain = strdup(domain);
+	s_addr->s_request = strdup(request);
 
 }
 
@@ -204,3 +200,5 @@ void set_default_options(struct_adress **str_addr){
 	
 	
 	}
+	
+

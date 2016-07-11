@@ -155,8 +155,9 @@ main (int argc, char **argv)
     }
 #endif
 	
-
-  free (rss_addres_options);
+  free(rss_addres_options->s_domain);
+  free(rss_addres_options->s_request);
+  free(rss_addres_options);
   free_list(List1);
 
   return 0;
