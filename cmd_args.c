@@ -25,22 +25,25 @@
 
 #define DEBUG 0
 
-uint8_t option_counter = 0;
+uint8_t option_counter = false;
 
 static type_struct lookuptable[] = {
-	{"dom", DOM},
-	{"parser=domain-object-model", DOM_LONG},
+	{"DOM", DOM},
+	{"PARSER=DOMAIN-OBJECT-MODEL", DOM_LONG},
 	{"XML", XML},
-	{"HTTP", HTTP}
+	{"HTTP", HTTP},
+	{"PRINT", PRINT},
+	{"UPDATE", UPDATE}
 };
 
 void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 {
 
 	/* hier prüfen wie viele adressen eingegeben wurden */
-	type_struct *type;
 
 	argv++;
+
+	
 
 	if (*argv != NULL) {
 		/* option counter nicht global machen */
@@ -49,25 +52,32 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 		if (option_counter != 0) {
 
 			switch (key_from_string(*argv)) {
-			case DOM:
-
-				type = &lookuptable[DOM - 1];
-				*argv =
-				    (*argv) + strlen(type->key) +
-				    option_counter;
-				option_counter = 0;
-				printf("\ncase dom\n");
-				handle_options(argv, argc, addr_pointer);
+			case DOM:			
+				printf("\noption DOM = true");
+				next_arg(argv, argc, addr_pointer, &option_counter, DOM);
 				break;
 			case DOM_LONG:
-				printf("\ncase dom_long\n");
+				printf("\noption DOM_LONG = true");
+				next_arg(argv, argc, addr_pointer, &option_counter, DOM_LONG);
 				break;
 			case XML:
-				printf("\ncase XML\n");
+				printf("\noption XML = true");
+				next_arg(argv, argc, addr_pointer, &option_counter, XML);
 				break;
 			case HTTP:
-				printf("\ncase HTTP\n");
+					printf("\noption HTTP = true");
+				next_arg(argv, argc, addr_pointer, &option_counter, HTTP);
 				break;
+			case PRINT:
+					printf("\noption PRINT = true");
+				(*addr_pointer)->b_print = true;
+				next_arg(argv, argc, addr_pointer, &option_counter, PRINT);
+				break;
+			case UPDATE:
+					printf("\noption UPDATE = true");
+					(*addr_pointer)->b_update = true;
+					next_arg(argv, argc, addr_pointer, &option_counter, UPDATE);
+					break;
 			case BADARG:
 				printf
 				    ("RSSReader -help list available commands and a short manual\n");
@@ -93,6 +103,18 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 
 }
 
+void
+next_arg(char **argv, int *argc,
+	 struct_adress ** addr_pointer, uint8_t * counter, uint8_t option)
+{
+	type_struct *type;
+
+	type = &lookuptable[option - 1];
+	*argv = (*argv) + strlen(type->key) + *counter;
+	*counter = 0;
+	handle_options(argv, argc, addr_pointer);
+}
+
 void test_arg(char **argv)
 {
 	if (((*argv)[0]) == '-') {
@@ -107,16 +129,14 @@ void test_arg(char **argv)
 int key_from_string(char *argv)
 {
 	uint8_t i;
-	char * str;
+	char *str;
 	str = malloc(strlen(argv) * sizeof(char));
 	memset(str, 0, (strlen(argv) * sizeof(char)));
-	while(argv[i])
-	{
+	while (argv[i]) {
 		str[i] = toupper(argv[i]);
 		i++;
 	}
-	
-	printf("String str: %s bei i = %d\n", str, i);
+
 	for (i = 0; i < NKEYS; i++) {
 		type_struct *typ = &lookuptable[i];
 		if (strcmp(typ->key, str) == 0) {
@@ -131,22 +151,23 @@ int key_from_string(char *argv)
 struct_adress
     ** get_server_address(char *address_string, struct_adress ** addr_ptr)
 {
-	uint16_t u16_sub_addr, u16_addr_lenght;
+	uint16_t u16_sub_addr;
 	char *domain, *req;
 
-	*addr_ptr = malloc(sizeof(struct_adress));
-	memset(*addr_ptr, 0, sizeof(struct_adress));
-	u16_addr_lenght = strlen(address_string);
+
+	
 	if (DEBUG)
 		printf("\n\nArg 1: %s\n", address_string);
 
 	u16_sub_addr = strcspn(address_string, START_SUBADDR);
 	if (DEBUG)
 		printf("\n\nStarttag at %d\n", u16_sub_addr);
-
+		
+	/* implement dynamic allocation of the memory */
+	#if 0
 	domain = malloc(u16_sub_addr * sizeof(char));
 	req = malloc((u16_addr_lenght - u16_sub_addr) * sizeof(char));
-
+	#endif
 	if ((domain = strtok(address_string, START_SUBADDR)) != NULL) {
 
 		if ((req = strtok(NULL, " ")) != NULL) {
@@ -168,11 +189,18 @@ struct_adress
 }
 
 void
-set_server_adress_struct(const char *domain, const char *request,
-			 struct_adress * s_addr)
+set_server_adress_struct(const char *domain,
+			 const char *request, struct_adress * s_addr)
 {
 
 	strncpy(s_addr->s_domain, domain, strlen(domain));
 	strncpy(s_addr->s_request, request, strlen(request));
 
 }
+
+void set_default_options(struct_adress **str_addr){
+	
+	(*str_addr)->b_update = false;
+	
+	
+	}

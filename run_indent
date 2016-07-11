@@ -1,0 +1,3 @@
+#!/bin/bash
+indent --line-length60 *.c
+indent --line-lenght60 *.h

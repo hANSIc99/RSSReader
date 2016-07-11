@@ -46,7 +46,7 @@
 #include "text.h"
 #include "cmd_args.h"
 #define DEBUG 0
-#define PRINT 1
+#define PRINT_OUT 1
 #define DELAY_SEC 10
 
 int delay_seconds = DELAY_SEC;
@@ -60,77 +60,102 @@ int delay_seconds = DELAY_SEC;
  * 
  */
 
-int main(int argc, char **argv)
+int
+main (int argc, char **argv)
 {
-	struct_adress *rss_addres_options = NULL;
+  struct_adress *rss_addres_options = NULL;
 
-	char *req_svr_ptr;
-	uint8_t update_flag = 1;
-	struct_news_list *List1, *List2;
+  char *req_svr_ptr;
+  uint8_t update_flag = 1;
+  struct_news_list *List1, *List2;
 
-	List1 = NULL;
-	List2 = NULL;
+  List1 = NULL;
+  List2 = NULL;
+  
+  
+  rss_addres_options = malloc(sizeof(struct_adress));
+  memset(rss_addres_options, 0, sizeof(struct_adress));
+  
+  /* rss_addres_options->b_update = true; */
 
-	LIBXML_TEST_VERSION 
-	handle_options(argv, &argc, &rss_addres_options);
+  LIBXML_TEST_VERSION
+    handle_options (argv, &argc, &rss_addres_options);
 
-	printf("%s", start_licence);
+  printf ("%s", start_licence);
 
-	if ((req_svr_ptr = req_server(rss_addres_options)) != NULL) {
-		/* req_svr_ptr holds the raw data from the server */
-		if (DEBUG)
-			printf("\nData loaded!\n");
+  if ((req_svr_ptr =
+       req_server (rss_addres_options)) != NULL)
+    {
+      /* req_svr_ptr holds the raw data from the server */
+      if (DEBUG)
+	printf ("\nData loaded!\n");
 
-		List1 = load_data(req_svr_ptr);
-	} else {
-		if (DEBUG)
-			printf("\nKeine Daten vorhanden: %s\n", req_svr_ptr);
-	}
+      List1 = load_data (req_svr_ptr);
+    }
+  else
+    {
+      if (DEBUG)
+	printf ("\nKeine Daten vorhanden: %s\n",
+		req_svr_ptr);
+    }
 
-	/* First time reading; news at last */
-	if (List1 != NULL) {
+  /* First time reading; news at last */
+  if (List1 != NULL)
+    {
+	
+      initial_update (&List1, rss_addres_options->b_print);
 
-		initial_update(&List1, PRINT);
+    }
+  else
+    {
+      printf ("\nRecall server.....\n");
+    }
 
-	} else {
-		printf("\nRecall server.....\n");
-	}
+set_default_options(&rss_addres_options);
 
 #if 1
-	while (1) {
+  while (rss_addres_options->b_update)
+    {
 
-		if (update_flag != 0) {
+      if (update_flag != 0)
+	{
 
-			update_flag = 0;
+	  update_flag = 0;
 
-			if (DEBUG)
-				printf("\nFirst Test");
+	  if (DEBUG)
+	    printf ("\nFirst Test");
 
-			List2 = load_data(req_server(rss_addres_options));
+	  List2 =
+	    load_data (req_server (rss_addres_options));
 
-			check_for_updates(List2, List1, delay_seconds, PRINT);
+	  check_for_updates (List2, List1, delay_seconds,
+			     rss_addres_options->b_print);
 
-			free_list(List1);
-
-		}
-
-		else {
-			if (DEBUG)
-				printf("\nSeconds Test");
-			update_flag = 1;
-
-			List1 = load_data(req_server(rss_addres_options));
-
-			check_for_updates(List1, List2, delay_seconds, PRINT);
-			free_list(List2);
-
-		}
+	  free_list (List1);
 
 	}
-#endif
-	free(rss_addres_options->s_domain);
-	free(rss_addres_options->s_request);
-	free(rss_addres_options);
 
-	return 0;
+      else
+	{
+	  if (DEBUG)
+	    printf ("\nSeconds Test");
+	  update_flag = 1;
+
+	  List1 =
+	    load_data (req_server (rss_addres_options));
+
+	  check_for_updates (List1, List2, delay_seconds,
+			     rss_addres_options->b_print);
+	  free_list (List2);
+
+	}
+
+    }
+#endif
+	
+
+  free (rss_addres_options);
+  free_list(List1);
+
+  return 0;
 }
