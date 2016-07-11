@@ -76,6 +76,7 @@ main (int argc, char **argv)
   rss_addres_options = malloc(sizeof(struct_adress));
   memset(rss_addres_options, 0, sizeof(struct_adress));
   
+  set_default_options(&rss_addres_options);
   /* rss_addres_options->b_update = true; */
 
   LIBXML_TEST_VERSION
@@ -111,9 +112,10 @@ main (int argc, char **argv)
       printf ("\nRecall server.....\n");
     }
 
-set_default_options(&rss_addres_options);
+
 
 #if 1
+
   while (rss_addres_options->b_update)
     {
 
