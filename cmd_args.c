@@ -129,9 +129,12 @@ void test_arg(char **argv)
 int key_from_string(char *argv)
 {
 	uint8_t i;
-	char *str;
+	char *str, *val_ptr;
 	str = malloc(strlen(argv) * sizeof(char));
 	memset(str, 0, (strlen(argv) * sizeof(char)));
+
+	/* convert args to upper chars */
+
 	while (argv[i]) {
 		str[i] = toupper(argv[i]);
 		i++;
@@ -140,6 +143,8 @@ int key_from_string(char *argv)
 	for (i = 0; i < NKEYS; i++) {
 		type_struct *typ = &lookuptable[i];
 		if (strcmp(typ->key, str) == 0) {
+			val_ptr = strchr(str, EXT_ARG_VAL);
+			printf("\nnext_arg_val: %s\n",val_ptr);
 			free(str);
 			return typ->val;
 		}

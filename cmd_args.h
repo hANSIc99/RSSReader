@@ -41,6 +41,7 @@
 #define BADARG -1
 
 #define NKEYS (sizeof(lookuptable)/sizeof(type_struct))
+#define EXT_ARG_VAL '='
 
 int key_from_string(char *argv);
 struct_adress **get_server_address(char *address_string,
