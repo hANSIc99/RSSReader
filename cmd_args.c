@@ -54,27 +54,32 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 			switch (key_from_string(*argv)) {
 			case DOM:			
 				printf("\noption DOM = true");
-				next_arg(argv, argc, addr_pointer, &option_counter, DOM);
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 				break;
 			case DOM_LONG:
 				printf("\noption DOM_LONG = true");
-				next_arg(argv, argc, addr_pointer, &option_counter, DOM_LONG);
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 				break;
 			case XML:
-				printf("\noption XML = true");
-				next_arg(argv, argc, addr_pointer, &option_counter, XML);
+				printf("\noption XML = true\n");
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 				break;
 			case HTTP:
-					printf("\noption HTTP = true");
-				next_arg(argv, argc, addr_pointer, &option_counter, HTTP);
+					printf("\noption HTTP = true\n");
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 				break;
 			case PRINT:
 					printf("\noption PRINT = true\n");
 				(*addr_pointer)->b_print = true;
-				next_arg(argv, argc, addr_pointer, &option_counter, PRINT);
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 				break;
 			case UPDATE:
-					printf("\noption UPDATE = true");
+					printf("\noption UPDATE = true\n");
 					test_val = argv;
 					test_val++;
 					(*addr_pointer)->b_update = true;
@@ -89,10 +94,11 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					printf("\nUpdate interval: %d seconds\n", ((*addr_pointer)->u16_update_interval_seconds));
 					argv++;
 					}
-					next_arg(argv, argc, addr_pointer, &option_counter, UPDATE);
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 					break;
 			case KEYWORD:
-					printf("\noption KEYWORD = true");
+					printf("\noption KEYWORD = true\n");
 					argv++;
 					if((*argv) != NULL){
 					(*addr_pointer)->search_keyword = strdup(*argv);
@@ -102,11 +108,12 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					printf("\nError, no keyword found.\n"
 					"The command is executed by -keyword WORDXY");
 					}
-					next_arg(argv, argc, addr_pointer, &option_counter, PRINT);
+option_counter = 0;
+	handle_options(argv, argc, addr_pointer);
 					break;					
 			case BADARG:
 				printf
-				    ("RSSReader -help list available commands and a short manual\n");
+				    ("Command \"%s\" not found.\nRSSReader -help list available commands and a short manual\n", (*argv));
 
 				break;
 			}
