@@ -68,6 +68,7 @@ typedef struct s_adress {
 	bool b_http;
 	bool b_json;
 	
+	char * search_keyword;	
 	uint16_t u16_update_interval_seconds;
 	
 } struct_adress;

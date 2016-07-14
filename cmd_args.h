@@ -38,6 +38,7 @@
 #define HTTP 4
 #define PRINT 5
 #define UPDATE 6
+#define KEYWORD 7
 #define BADARG -1
 
 #define NKEYS (sizeof(lookuptable)/sizeof(type_struct))

@@ -33,7 +33,8 @@ static type_struct lookuptable[] = {
 	{"XML", XML},
 	{"HTTP", HTTP},
 	{"PRINT", PRINT},
-	{"UPDATE", UPDATE}
+	{"UPDATE", UPDATE},
+	{"KEYWORD",KEYWORD}
 };
 
 void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
@@ -75,9 +76,32 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				break;
 			case UPDATE:
 					printf("\noption UPDATE = true");
+					argv++;
 					(*addr_pointer)->b_update = true;
+					if((*argv) != NULL){
+					(*addr_pointer)->u16_update_interval_seconds = strtol((*argv), NULL, 10);
+					}
+					if((*addr_pointer)->u16_update_interval_seconds == 0){
+					printf("\nNo correct interval found, default will be 60 seconds.\n");
+					(*addr_pointer)->u16_update_interval_seconds = 60;
+					}
+					else{
+					printf("\nUpdate interval: %d seconds\n", ((*addr_pointer)->u16_update_interval_seconds));
+					}
 					next_arg(argv, argc, addr_pointer, &option_counter, UPDATE);
 					break;
+			case KEYWORD:
+					printf("\noption UPDATE = true");
+					argv++;
+					if((*argv) != NULL){
+					(*addr_pointer)->search_keyword = strdup(*argv);
+					printf("\nKeyword found: %s\n", (*addr_pointer)->search_keyword);
+					}
+					else {
+					printf("\nError, no keyword found.\n"
+					"The command is executed by -keyword WORDXY");
+					}
+					break;					
 			case BADARG:
 				printf
 				    ("RSSReader -help list available commands and a short manual\n");
@@ -129,7 +153,7 @@ void test_arg(char **argv)
 int key_from_string(char *argv)
 {
 	uint8_t i;
-	char *str, *val_ptr;
+	char *str;
 	str = malloc(strlen(argv) * sizeof(char));
 	memset(str, 0, (strlen(argv) * sizeof(char)));
 
@@ -143,8 +167,6 @@ int key_from_string(char *argv)
 	for (i = 0; i < NKEYS; i++) {
 		type_struct *typ = &lookuptable[i];
 		if (strcmp(typ->key, str) == 0) {
-			val_ptr = strchr(str, EXT_ARG_VAL);
-			printf("\nnext_arg_val: %s\n",val_ptr);
 			free(str);
 			return typ->val;
 		}
