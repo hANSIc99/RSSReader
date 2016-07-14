@@ -130,7 +130,7 @@ main (int argc, char **argv)
 	  List2 =
 	    load_data (req_server (rss_addres_options));
 
-	  check_for_updates (List2, List1, delay_seconds,
+	  check_for_updates (List2, List1,rss_addres_options->u16_update_interval_seconds, 
 			     rss_addres_options->b_print);
 
 	  free_list (List1);

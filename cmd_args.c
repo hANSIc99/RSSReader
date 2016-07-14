@@ -42,9 +42,8 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 
 	/* hier prüfen wie viele adressen eingegeben wurden */
 
+					char ** test_val;
 	argv++;
-
-	
 
 	if (*argv != NULL) {
 		/* option counter nicht global machen */
@@ -70,16 +69,17 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				next_arg(argv, argc, addr_pointer, &option_counter, HTTP);
 				break;
 			case PRINT:
-					printf("\noption PRINT = true");
+					printf("\noption PRINT = true\n");
 				(*addr_pointer)->b_print = true;
 				next_arg(argv, argc, addr_pointer, &option_counter, PRINT);
 				break;
 			case UPDATE:
 					printf("\noption UPDATE = true");
-					argv++;
+					test_val = argv;
+					test_val++;
 					(*addr_pointer)->b_update = true;
-					if((*argv) != NULL){
-					(*addr_pointer)->u16_update_interval_seconds = strtol((*argv), NULL, 10);
+					if((*test_val) != NULL){
+					(*addr_pointer)->u16_update_interval_seconds = strtol((*test_val), NULL, 10);
 					}
 					if((*addr_pointer)->u16_update_interval_seconds == 0){
 					printf("\nNo correct interval found, default will be 60 seconds.\n");
@@ -87,11 +87,12 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					}
 					else{
 					printf("\nUpdate interval: %d seconds\n", ((*addr_pointer)->u16_update_interval_seconds));
+					argv++;
 					}
 					next_arg(argv, argc, addr_pointer, &option_counter, UPDATE);
 					break;
 			case KEYWORD:
-					printf("\noption UPDATE = true");
+					printf("\noption KEYWORD = true");
 					argv++;
 					if((*argv) != NULL){
 					(*addr_pointer)->search_keyword = strdup(*argv);
@@ -101,6 +102,7 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					printf("\nError, no keyword found.\n"
 					"The command is executed by -keyword WORDXY");
 					}
+					next_arg(argv, argc, addr_pointer, &option_counter, PRINT);
 					break;					
 			case BADARG:
 				printf
@@ -132,16 +134,18 @@ next_arg(char **argv, int *argc,
 	 struct_adress ** addr_pointer, uint8_t * counter, uint8_t option)
 {
 	type_struct *type;
-
+#if 0 
 	type = &lookuptable[option - 1];
 	*argv = (*argv) + strlen(type->key) + *counter;
+#endif
 	*counter = 0;
+/* Baustelle: funktion next arg kann eigentlich weg */
 	handle_options(argv, argc, addr_pointer);
 }
 
 void test_arg(char **argv)
 {
-	if (((*argv)[0]) == '-') {
+	if (((*argv)[0]) == '-')     {
 
 		option_counter++;
 		*argv = (*argv) + 1;
