@@ -34,7 +34,7 @@ static type_struct lookuptable[] = {
 	{"HTTP", HTTP},
 	{"PRINT", PRINT},
 	{"UPDATE", UPDATE},
-	{"KEYWORD",KEYWORD}
+	{"KEYWORD", KEYWORD}
 };
 
 void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
@@ -42,7 +42,7 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 
 	/* hier prüfen wie viele adressen eingegeben wurden */
 
-					char ** test_val;
+	char **test_val;
 	argv++;
 
 	if (*argv != NULL) {
@@ -52,68 +52,80 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 		if (option_counter != 0) {
 
 			switch (key_from_string(*argv)) {
-			case DOM:			
+			case DOM:
 				printf("\noption DOM = true");
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case DOM_LONG:
 				printf("\noption DOM_LONG = true");
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case XML:
 				printf("\noption XML = true\n");
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case HTTP:
-					printf("\noption HTTP = true\n");
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
+				printf("\noption HTTP = true\n");
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case PRINT:
-					printf("\noption PRINT = true\n");
+				printf("\noption PRINT = true\n");
 				(*addr_pointer)->b_print = true;
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case UPDATE:
-					printf("\noption UPDATE = true\n");
-					test_val = argv;
-					test_val++;
-					(*addr_pointer)->b_update = true;
-					if((*test_val) != NULL){
-					(*addr_pointer)->u16_update_interval_seconds = strtol((*test_val), NULL, 10);
-					}
-					if((*addr_pointer)->u16_update_interval_seconds == 0){
-					printf("\nNo correct interval found, default will be 60 seconds.\n");
-					(*addr_pointer)->u16_update_interval_seconds = 60;
-					}
-					else{
-					printf("\nUpdate interval: %d seconds\n", ((*addr_pointer)->u16_update_interval_seconds));
+				printf("\noption UPDATE = true\n");
+				test_val = argv;
+				test_val++;
+				(*addr_pointer)->b_update = true;
+				if ((*test_val) != NULL) {
+					(*addr_pointer)->
+					    u16_update_interval_seconds =
+					    strtol((*test_val), NULL, 10);
+				}
+				if ((*addr_pointer)->
+				    u16_update_interval_seconds == 0) {
+					printf
+					    ("\nNo correct interval found, default will be 60 seconds.\n");
+					(*addr_pointer)->
+					    u16_update_interval_seconds = 60;
+				} else {
+					printf
+					    ("\nUpdate interval: %d seconds\n",
+					     ((*addr_pointer)->
+					      u16_update_interval_seconds));
 					argv++;
-					}
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
-					break;
+				}
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
+				break;
 			case KEYWORD:
-					printf("\noption KEYWORD = true\n");
+				printf("\noption KEYWORD = true\n");
+				test_val = argv;
+				test_val++;
+				if (((*test_val) != NULL)
+				    && (((*test_val)[0]) != '-')) {
+					(*addr_pointer)->search_keyword =
+					    strdup(*test_val);
 					argv++;
-					if((*argv) != NULL){
-					(*addr_pointer)->search_keyword = strdup(*argv);
-					printf("\nKeyword found: %s\n", (*addr_pointer)->search_keyword);
-					}
-					else {
+					printf("\nKeyword found: %s\n",
+					       (*addr_pointer)->search_keyword);
+				} else {
 					printf("\nError, no keyword found.\n"
-					"The command is executed by -keyword WORDXY");
-					}
-option_counter = 0;
-	handle_options(argv, argc, addr_pointer);
-					break;					
+					       "The command is executed by -keyword WORDXY");
+				}
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
+				break;
 			case BADARG:
 				printf
-				    ("Command \"%s\" not found.\nRSSReader -help list available commands and a short manual\n", (*argv));
+				    ("Command \"%s\" not found.\nRSSReader -help list available commands and a short manual\n",
+				     (*argv));
 
 				break;
 			}
@@ -141,7 +153,7 @@ next_arg(char **argv, int *argc,
 	 struct_adress ** addr_pointer, uint8_t * counter, uint8_t option)
 {
 	type_struct *type;
-#if 0 
+#if 0
 	type = &lookuptable[option - 1];
 	*argv = (*argv) + strlen(type->key) + *counter;
 #endif
@@ -152,7 +164,7 @@ next_arg(char **argv, int *argc,
 
 void test_arg(char **argv)
 {
-	if (((*argv)[0]) == '-')     {
+	if (((*argv)[0]) == '-') {
 
 		option_counter++;
 		*argv = (*argv) + 1;
@@ -192,15 +204,12 @@ struct_adress
 	uint16_t u16_sub_addr;
 	char *domain, *req;
 
-
-	
 	if (DEBUG)
 		printf("\n\nArg 1: %s\n", address_string);
 
 	u16_sub_addr = strcspn(address_string, START_SUBADDR);
 	if (DEBUG)
 		printf("\n\nStarttag at %d\n", u16_sub_addr);
-		
 
 	if ((domain = strtok(address_string, START_SUBADDR)) != NULL) {
 
@@ -232,11 +241,9 @@ set_server_adress_struct(const char *domain,
 
 }
 
-void set_default_options(struct_adress **str_addr){
-	
-	(*str_addr)->b_update = false;
-	
-	
-	}
-	
+void set_default_options(struct_adress ** str_addr)
+{
 
+	(*str_addr)->b_update = false;
+
+}
