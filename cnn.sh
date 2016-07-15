@@ -1,2 +1,2 @@
 #!/bin/bash
-./RSSReader -print -update edition.cnn.com/rss/cnn_topstories.rss
+./RSSReader -print -update 55 edition.cnn.com/rss/cnn_topstories.rss

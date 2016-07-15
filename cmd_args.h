@@ -29,7 +29,6 @@
 #include <ctype.h>
 #include "struct.h"
 
-
 #define START_SUBADDR "/"
 
 #define DOM 1
@@ -51,8 +50,5 @@ void set_server_adress_struct(const char *domain, const char *request,
 			      struct_adress * s_addr);
 void test_arg(char **argv);
 void handle_options(char **argv, int *argc, struct_adress ** addr_pointer);
-void
-next_arg(char **argv, int *argc,
-	 struct_adress ** addr_pointer, uint8_t * counter, uint8_t option);
-void set_default_options(struct_adress **str_addr);
+void set_default_options(struct_adress ** str_addr);
 #endif

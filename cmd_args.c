@@ -88,8 +88,8 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					    u16_update_interval_seconds =
 					    strtol((*test_val), NULL, 10);
 				}
-				if ((*addr_pointer)->
-				    u16_update_interval_seconds == 0) {
+				if ((*addr_pointer)->u16_update_interval_seconds
+				    == 0) {
 					printf
 					    ("\nNo correct interval found, default will be 60 seconds.\n");
 					(*addr_pointer)->
@@ -126,7 +126,7 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				printf
 				    ("Command \"%s\" not found.\nRSSReader -help list available commands and a short manual\n",
 				     (*argv));
-
+				exit(1);
 				break;
 			}
 
@@ -146,20 +146,6 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 		exit(1);
 	}
 
-}
-
-void
-next_arg(char **argv, int *argc,
-	 struct_adress ** addr_pointer, uint8_t * counter, uint8_t option)
-{
-	type_struct *type;
-#if 0
-	type = &lookuptable[option - 1];
-	*argv = (*argv) + strlen(type->key) + *counter;
-#endif
-	*counter = 0;
-/* Baustelle: funktion next arg kann eigentlich weg */
-	handle_options(argv, argc, addr_pointer);
 }
 
 void test_arg(char **argv)

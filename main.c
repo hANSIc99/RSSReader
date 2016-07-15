@@ -53,113 +53,94 @@ int delay_seconds = DELAY_SEC;
 
 /* todo's:
  * 
- *   implement to upper function
- * 
- *   http://www.cplusplus.com/reference/cctype/toupper/
- * 
- * 
+ * the server adress will be included into the struct and
+ * the adress struct will be an argument of the function
+ * load_data 
  */
 
-int
-main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-  struct_adress *rss_addres_options = NULL;
+	struct_adress *rss_addres_options = NULL;
 
-  char *req_svr_ptr;
-  uint8_t update_flag = 1;
-  struct_news_list *List1, *List2;
+	char *req_svr_ptr;
+	uint8_t update_flag = 1;
+	struct_news_list *List1, *List2;
 
-  List1 = NULL;
-  List2 = NULL;
-  
-  
-  rss_addres_options = malloc(sizeof(struct_adress));
-  memset(rss_addres_options, 0, sizeof(struct_adress));
-  
-  set_default_options(&rss_addres_options);
-  /* rss_addres_options->b_update = true; */
+	List1 = NULL;
+	List2 = NULL;
 
-  LIBXML_TEST_VERSION
-    handle_options (argv, &argc, &rss_addres_options);
+	rss_addres_options = malloc(sizeof(struct_adress));
+	memset(rss_addres_options, 0, sizeof(struct_adress));
 
-  printf ("%s", start_licence);
+	set_default_options(&rss_addres_options);
 
-  if ((req_svr_ptr =
-       req_server (rss_addres_options)) != NULL)
-    {
-      /* req_svr_ptr holds the raw data from the server */
-      if (DEBUG)
-	printf ("\nData loaded!\n");
+	LIBXML_TEST_VERSION handle_options(argv, &argc, &rss_addres_options);
 
-      List1 = load_data (req_svr_ptr);
-    }
-  else
-    {
-      if (DEBUG)
-	printf ("\nKeine Daten vorhanden: %s\n",
-		req_svr_ptr);
-    }
+	printf("%s", start_licence);
 
-  /* First time reading; news at last */
-  if (List1 != NULL)
-    {
-	
-      initial_update (&List1, rss_addres_options->b_print);
+	if ((req_svr_ptr = req_server(rss_addres_options)) != NULL) {
+		/* req_svr_ptr holds the raw data from the server */
+		if (DEBUG) {
+			printf("\nData loaded!\n");
+		}
+		List1 = load_data(req_svr_ptr);
+	} else {
+		if (DEBUG) {
+			printf("\nKeine Daten vorhanden: %s\n", req_svr_ptr);
+		}
+	}
 
-    }
-  else
-    {
-      printf ("\nRecall server.....\n");
-    }
+	/* First time reading; news at last */
+	if (List1 != NULL) {
 
+		initial_update(&List1, rss_addres_options->b_print);
 
+	} else {
+		printf("\nRecall server.....\n");
+	}
 
 #if 1
 
-  while (rss_addres_options->b_update)
-    {
+	while (rss_addres_options->b_update) {
 
-      if (update_flag != 0)
-	{
+		if (update_flag != 0) {
 
-	  update_flag = 0;
+			update_flag = 0;
 
-	  if (DEBUG)
-	    printf ("\nFirst Test");
+			if (DEBUG)
+				printf("\nFirst Test");
 
-	  List2 =
-	    load_data (req_server (rss_addres_options));
+			List2 = load_data(req_server(rss_addres_options));
 
-	  check_for_updates (List2, List1,rss_addres_options->u16_update_interval_seconds, 
-			     rss_addres_options->b_print);
+			check_for_updates(List2, List1,
+					  rss_addres_options->u16_update_interval_seconds,
+					  rss_addres_options->b_print);
 
-	  free_list (List1);
+			free_list(List1);
 
-	}
+		}
 
-      else
-	{
-	  if (DEBUG)
-	    printf ("\nSeconds Test");
-	  update_flag = 1;
+		else {
+			if (DEBUG)
+				printf("\nSeconds Test");
+			update_flag = 1;
 
-	  List1 =
-	    load_data (req_server (rss_addres_options));
+			List1 = load_data(req_server(rss_addres_options));
 
-	  check_for_updates (List1, List2, delay_seconds,
-			     rss_addres_options->b_print);
-	  free_list (List2);
+			check_for_updates(List1, List2, delay_seconds,
+					  rss_addres_options->b_print);
+			free_list(List2);
+
+		}
 
 	}
-
-    }
 #endif
-	
-  free(rss_addres_options->s_domain);
-  free(rss_addres_options->s_request);
-  free(rss_addres_options->search_keyword);
-  free(rss_addres_options);
-  free_list(List1);
 
-  return 0;
+	free(rss_addres_options->s_domain);
+	free(rss_addres_options->s_request);
+	free(rss_addres_options->search_keyword);
+	free(rss_addres_options);
+	free_list(List1);
+
+	return 0;
 }

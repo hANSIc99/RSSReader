@@ -59,18 +59,18 @@ typedef struct s_news_list {
 
 typedef struct s_adress {
 
-	char * s_domain;
-	char * s_request;
-	
+	char *s_domain;
+	char *s_request;
+
 	bool b_print;
 	bool b_update;
 	bool b_xml;
 	bool b_http;
 	bool b_json;
-	
-	char * search_keyword;	
+
+	char *search_keyword;
 	uint16_t u16_update_interval_seconds;
-	
+
 } struct_adress;
 
 typedef struct {
