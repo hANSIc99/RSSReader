@@ -1,5 +1,5 @@
 /*
- * xml_handler.h
+ * json_mashine.h
  * 
  * Copyright 2016 Stephan Avenwedde <stephanpc@stepohan-ubuntu64>
  * 
@@ -21,28 +21,15 @@
  * 
  */
 
-#ifndef _XML_HANDLER
-#define _XML_HANDLER
+#ifndef _JSON_MASHINE_H
+#define _JSON_MASHINE_H
 
-#include <stdint.h>
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <libxml/xmlreader.h>
-
+#include <inttypes.h>
+#include "struct.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#include "struct.h"
 
-struct_news_list *load_data(struct_adress * meta_info);
-int dom_parser(const char *content, int length, struct_news_list * list_ptr);
-
-void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr);
-char *get_temp_string(char *xml_string, int startzeichen, int str_lenght);
-char *get_server_info(char *xml_string, int startzeichen);
-int get_starttag(const char *xml_string, const char *start_tag);
-char *get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght);
-void append(struct_news ** lst, uint16_t * position, char *title, char *link,
-	    char *description, struct_news_list * list_ptr);
+void process_json(struct_news_list ** List, struct_adress ** address_options);
 
 #endif

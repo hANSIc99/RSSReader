@@ -26,7 +26,7 @@
 #define DELAY_CON_LOST 10;
 #define DEBUG 0
 
-void initial_update(struct_news_list ** List, uint8_t print_flag)
+void initial_update(struct_news_list ** List, struct_adress ** address_options)
 {
 
 	struct_news *temp_pointer;
@@ -34,9 +34,10 @@ void initial_update(struct_news_list ** List, uint8_t print_flag)
 	for (temp_pointer = (*List)->end; temp_pointer != NULL;
 	     temp_pointer = temp_pointer->previous) {
 
-		if (print_flag) {
-			printf("\nTitle No.: %d : %s\n",
-			       temp_pointer->position, temp_pointer->title);
+		if (((*address_options)->b_print == true)
+		    && ((*address_options)->b_json == false)) {
+			printf("\nTitle No.: %d : %s\n", temp_pointer->position,
+			       temp_pointer->title);
 			printf("\nLink: %s\n", temp_pointer->link);
 
 			if (temp_pointer->description != NULL) {
@@ -48,15 +49,19 @@ void initial_update(struct_news_list ** List, uint8_t print_flag)
 			}
 		}
 	}
+	if ((*address_options)->b_json == true) {
+		/* here the JSON-Object is build */
+		process_json(List, address_options);
+	}
 
 }
 
 uint8_t
 check_for_updates(const struct_news_list * new_list,
 		  const struct_news_list * old_list,
-		  const uint16_t u16_intervall, const uint8_t u8_print_flag)
+		  struct_adress ** address_options)
 {
-
+/* u16_intervall and u8_print flag have to be replaced */
 	uint16_t delay_milliseconds = DELAY_MILLI
 	    uint16_t delay_connection_lost = DELAY_CON_LOST
 	    struct_news * str_ptr;
@@ -66,24 +71,26 @@ check_for_updates(const struct_news_list * new_list,
 		for (str_ptr = new_list->start; str_ptr != NULL;
 		     str_ptr = str_ptr->next) {
 
-			if (DEBUG)
+			if (DEBUG) {
 				printf("\nresult of strcmp = %d\n",
 				       strncmp((str_ptr->title),
 					       (old_list->start->title),
 					       (strlen
 						(new_list->start->title))));
-
+			}
 			if (strcmp(str_ptr->title, old_list->start->title) != 0) {
 
-				if (u8_print_flag != 0) {
+				if ((*address_options)->b_print != 0) {
 
-					if (str_ptr->title != NULL)
+					if (str_ptr->title != NULL) {
 						printf
 						    ("\nNew headline:\n%s\n\n",
 						     str_ptr->title);
-					if (str_ptr->link != NULL)
+					}
+					if (str_ptr->link != NULL) {
 						printf("\nLink: %s\n",
 						       str_ptr->link);
+					}
 					if (str_ptr->description != NULL) {
 						printf("\nDescription: %s\n\n",
 						       str_ptr->description);
@@ -103,7 +110,9 @@ check_for_updates(const struct_news_list * new_list,
 
 		}
 
-		update_assistant(&delay_milliseconds, &u16_intervall);
+		update_assistant(&delay_milliseconds,
+				 &(*address_options)->
+				 u16_update_interval_seconds);
 		/* If old_list was not NULL */
 		return 1;
 	} else {

@@ -265,7 +265,7 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 	}
 }
 
-struct_news_list *load_data(char *xml_string)
+struct_news_list *load_data(struct_adress * meta_info)
 {
 
 	int gesamtlaenge, counter2, startzeichen, str_lenght;
@@ -284,20 +284,19 @@ struct_news_list *load_data(char *xml_string)
 
 	if (DEBUG)
 		printf("For-Schleife load_data\n");
-
-	gesamtlaenge = strlen(xml_string);
+	gesamtlaenge = strlen(meta_info->s_raw_string);
 
 	if (DEBUG) {
 		printf("\nLänge des String: %d\n", gesamtlaenge);
 
 		for (counter2 = 0; counter2 < 20; counter2++) {
 			printf("\nBuchtabe %d : ", counter2);
-			printf("%c", xml_string[counter2]);
+			printf("%c", meta_info->s_raw_string[counter2]);
 		}
 	}
 
 	/* Position des Startzeichens im array holen */
-	startzeichen = get_starttag(xml_string, start_tag);
+	startzeichen = get_starttag(meta_info->s_raw_string, start_tag);
 
 	if ((startzeichen >= gesamtlaenge) || (startzeichen <= 0)) {
 		printf("\nServer query failed\n");
@@ -321,7 +320,8 @@ struct_news_list *load_data(char *xml_string)
 
 	/* String temp mit XML-Daten erzeugen */
 
-	temp = get_temp_string(xml_string, startzeichen, str_lenght);
+	temp =
+	    get_temp_string(meta_info->s_raw_string, startzeichen, str_lenght);
 
 	/* String server_info mit den am Anfang gesendeten Serverdaten erzeugen */
 
@@ -351,22 +351,26 @@ struct_news_list *load_data(char *xml_string)
 		       rss_string[(strlen(rss_string) - 1)]);
 	}
 #endif
+	if (meta_info->b_dom_parser == true) {
+		if ((dom_parser(rss_string, (strlen(rss_string)), lists)) == 0) {
 
-	if ((dom_parser(rss_string, (strlen(rss_string)), lists)) == 0) {
+			free(rss_string);
 
-		free(rss_string);
+			if (DEBUG)
+				printf("\nexamplefunc succeed\n");
 
-		if (DEBUG)
-			printf("\nexamplefunc succeed\n");
-
-
-		return lists;
+			return lists;
+		} else {
+			free(rss_string);
+			free(lists);
+			if (DEBUG)
+				printf("\nexamplefunc failed\n");
+			return NULL;
+		}
 	} else {
-		free(rss_string);
-		free(lists);
-		if (DEBUG)
-			printf("\nexamplefunc failed\n");
-		return NULL;
+		printf
+		    ("\nThe DOM-Parser is currently the only working parser, sorry!\n");
+		exit(1);
 	}
 }
 

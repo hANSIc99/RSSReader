@@ -34,7 +34,8 @@ static type_struct lookuptable[] = {
 	{"HTTP", HTTP},
 	{"PRINT", PRINT},
 	{"UPDATE", UPDATE},
-	{"KEYWORD", KEYWORD}
+	{"KEYWORD", KEYWORD},
+	{"JSON", JSON}
 };
 
 void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
@@ -54,11 +55,13 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 			switch (key_from_string(*argv)) {
 			case DOM:
 				printf("\noption DOM = true");
+				(*addr_pointer)->b_dom_parser = true;
 				option_counter = 0;
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case DOM_LONG:
 				printf("\noption DOM_LONG = true");
+				(*addr_pointer)->b_dom_parser = true;
 				option_counter = 0;
 				handle_options(argv, argc, addr_pointer);
 				break;
@@ -122,6 +125,13 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				option_counter = 0;
 				handle_options(argv, argc, addr_pointer);
 				break;
+			case JSON:
+				printf("\noption JSON = true\n");
+				(*addr_pointer)->b_json = true;
+				option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
+				break;
+
 			case BADARG:
 				printf
 				    ("Command \"%s\" not found.\nRSSReader -help list available commands and a short manual\n",
@@ -231,5 +241,6 @@ void set_default_options(struct_adress ** str_addr)
 {
 
 	(*str_addr)->b_update = false;
+	(*str_addr)->b_dom_parser = true;
 
 }

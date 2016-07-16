@@ -53,16 +53,13 @@ int delay_seconds = DELAY_SEC;
 
 /* todo's:
  * 
- * the server adress will be included into the struct and
- * the adress struct will be an argument of the function
- * load_data 
+ *implement the json output   
  */
 
 int main(int argc, char **argv)
 {
 	struct_adress *rss_addres_options = NULL;
 
-	char *req_svr_ptr;
 	uint8_t update_flag = 1;
 	struct_news_list *List1, *List2;
 
@@ -78,22 +75,22 @@ int main(int argc, char **argv)
 
 	printf("%s", start_licence);
 
-	if ((req_svr_ptr = req_server(rss_addres_options)) != NULL) {
+	if (rss_addres_options != NULL) {
 		/* req_svr_ptr holds the raw data from the server */
 		if (DEBUG) {
 			printf("\nData loaded!\n");
 		}
-		List1 = load_data(req_svr_ptr);
+		req_server(rss_addres_options);
+		List1 = load_data(rss_addres_options);
 	} else {
 		if (DEBUG) {
-			printf("\nKeine Daten vorhanden: %s\n", req_svr_ptr);
 		}
 	}
 
 	/* First time reading; news at last */
 	if (List1 != NULL) {
 
-		initial_update(&List1, rss_addres_options->b_print);
+		initial_update(&List1, &rss_addres_options);
 
 	} else {
 		printf("\nRecall server.....\n");
@@ -107,28 +104,27 @@ int main(int argc, char **argv)
 
 			update_flag = 0;
 
-			if (DEBUG)
+			if (DEBUG) {
 				printf("\nFirst Test");
+			}
+			req_server(rss_addres_options);
+			List2 = load_data(rss_addres_options);
 
-			List2 = load_data(req_server(rss_addres_options));
-
-			check_for_updates(List2, List1,
-					  rss_addres_options->u16_update_interval_seconds,
-					  rss_addres_options->b_print);
+			check_for_updates(List2, List1, &rss_addres_options);
 
 			free_list(List1);
 
 		}
 
 		else {
-			if (DEBUG)
+			if (DEBUG) {
 				printf("\nSeconds Test");
+			}
 			update_flag = 1;
+			req_server(rss_addres_options);
+			List1 = load_data(rss_addres_options);
 
-			List1 = load_data(req_server(rss_addres_options));
-
-			check_for_updates(List1, List2, delay_seconds,
-					  rss_addres_options->b_print);
+			check_for_updates(List1, List2, &rss_addres_options);
 			free_list(List2);
 
 		}
@@ -139,6 +135,7 @@ int main(int argc, char **argv)
 	free(rss_addres_options->s_domain);
 	free(rss_addres_options->s_request);
 	free(rss_addres_options->search_keyword);
+	free(rss_addres_options->s_raw_string);
 	free(rss_addres_options);
 	free_list(List1);
 

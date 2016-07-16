@@ -52,5 +52,5 @@ struct addrinfo {
 };
 #endif
 void *get_in_addr(struct sockaddr *sa);
-char *req_server(const struct_adress * rss_server);
+void req_server(struct_adress * rss_server);
 #endif
