@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <jansson.h>
 void process_json(struct_news_list ** List, struct_adress ** address_options);
 
 #endif

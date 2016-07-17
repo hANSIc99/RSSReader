@@ -27,5 +27,6 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 {
 
 	printf("json_mashine is here");
-
+	json_t *root;
+    json_error_t error;
 }
