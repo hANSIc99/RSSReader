@@ -1,5 +1,5 @@
 /*
- * update_service.h
+ * json_mashine.c
  * 
  * Copyright 2016 Stephan Avenwedde <stephanpc@stepohan-ubuntu64>
  * 
@@ -21,21 +21,20 @@
  * 
  */
 
-#ifndef _UPDATE_SERVICE_H
-#define _UPDATE_SERVICE_H
-
-#include <inttypes.h>
-#include "struct.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "json_machine.h"
-void update_assistant(const uint16_t * milliseconds, const uint16_t * seconds);
-void initial_update(struct_news_list ** List, struct_adress ** address_options);
-uint8_t
-check_for_updates(const struct_news_list * new_list,
-		  const struct_news_list * old_list,
-		  struct_adress ** address_options);
-void free_list(struct_news_list * list);
 
-#endif
+void process_json(struct_news_list ** List, struct_adress ** address_options)
+{
+JSON_INDENT(4);
+JSON_COMPACT ;
+	printf("json_mashine is here");
+json_t *j_object, *j_string_1, *j_string_2;  
+j_object = json_object();
+j_string_1 = json_string("HALLO FROM JSON");
+j_string_2 = json_string("Hier ist string 2");
+
+json_object_set(j_object, "string_1",j_string_1);
+json_object_set(j_object, "string_2", j_string_2);
+
+printf("\n\n%s\n", json_dumps(j_object, JSON_INDENT(4))); 
+}

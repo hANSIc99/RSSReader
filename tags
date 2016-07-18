@@ -20,9 +20,9 @@
 4	doxy_doku/html/search/searchdata.js	/^  3: "functions",$/;"	p	class:indexSectionNames
 4	doxy_doku/html/search/searchdata.js	/^  3: "k",$/;"	p	class:indexSectionsWithContent
 Activate	doxy_doku/html/search/search.js	/^  this.Activate = function(isActive)$/;"	m	class:SearchBox
-BADARG	cmd_args.h	41;"	d
+BADARG	cmd_args.h	42;"	d
 CC	Makefile	/^CC=gcc$/;"	m
-CFLAGS	Makefile	/^CFLAGS= -c -Wall -std=c11 -ansi -Wextra -pedantic -Woverlength-strings -g -O0 -I \/usr\/local\/include\/libxml2\/ -D_POSIX_C_SOURCE=200112L  -D_GNU_SOURCE$/;"	m
+CFLAGS	Makefile	/^CFLAGS= -c -Wall -std=c11 -Wextra -pedantic -Woverlength-strings -g -O0 -I \/usr\/local\/include\/libxml2\/  -D_POSIX_C_SOURCE=200112L  -D_GNU_SOURCE $/;"	m
 CloseResultsWindow	doxy_doku/html/search/search.js	/^  this.CloseResultsWindow = function()$/;"	m	class:SearchBox
 CloseSelectionWindow	doxy_doku/html/search/search.js	/^  this.CloseSelectionWindow = function()$/;"	m	class:SearchBox
 DEBUG	cmd_args.c	26;"	d	file:
@@ -33,7 +33,7 @@ DEBUG	xml_handler.c	27;"	d	file:
 DELAY_CON_LOST	update_service.c	26;"	d	file:
 DELAY_MILLI	update_service.c	25;"	d	file:
 DELAY_SEC	main.c	50;"	d	file:
-DEPS	Makefile	/^DEPS = req_data.h xml_handler.h struct.h update_service.h text.h cmd_args.h$/;"	m
+DEPS	Makefile	/^DEPS = req_data.h xml_handler.h struct.h update_service.h text.h cmd_args.h json_machine.h$/;"	m
 DOM	cmd_args.h	34;"	d
 DOMPopupSearchResults	doxy_doku/html/search/search.js	/^  this.DOMPopupSearchResults = function()$/;"	m	class:SearchBox
 DOMPopupSearchResultsWindow	doxy_doku/html/search/search.js	/^  this.DOMPopupSearchResultsWindow = function()$/;"	m	class:SearchBox
@@ -43,21 +43,22 @@ DOMSearchField	doxy_doku/html/search/search.js	/^  this.DOMSearchField = functio
 DOMSearchSelect	doxy_doku/html/search/search.js	/^  this.DOMSearchSelect = function()$/;"	m	class:SearchBox
 DOMSearchSelectWindow	doxy_doku/html/search/search.js	/^  this.DOMSearchSelectWindow = function()$/;"	m	class:SearchBox
 DOM_LONG	cmd_args.h	35;"	d
-EXT_ARG_VAL	cmd_args.h	44;"	d
+EXT_ARG_VAL	cmd_args.h	45;"	d
 FindChildElement	doxy_doku/html/search/search.js	/^    this.FindChildElement = function(id)$/;"	m	class:SearchResults
 HTTP	cmd_args.h	37;"	d
+JSON	cmd_args.h	41;"	d
 KEYWORD	cmd_args.h	40;"	d
-LIBS	Makefile	/^LIBS = -L\/usr\/local\/lib -lxml2 -lm -ldl$/;"	m
+LIBS	Makefile	/^LIBS = -L\/usr\/local\/lib -lm -ljansson -lxml2  $/;"	m
 MARKUP_START	xml_handler.c	30;"	d	file:
 MAXDATASIZE	req_data.h	36;"	d
 MAX_DOMAIN_LENGHT	struct.h	30;"	d
 MAX_REQUEST_LENGHT	struct.h	31;"	d
-NKEYS	cmd_args.h	43;"	d
+NKEYS	cmd_args.h	44;"	d
 Nav	doxy_doku/html/search/search.js	/^    this.Nav = function(evt,itemIndex)$/;"	m	class:SearchResults
 NavChild	doxy_doku/html/search/search.js	/^    this.NavChild = function(evt,itemIndex,childIndex)$/;"	m	class:SearchResults
 NavNext	doxy_doku/html/search/search.js	/^    this.NavNext = function(index)$/;"	m	class:SearchResults
 NavPrev	doxy_doku/html/search/search.js	/^    this.NavPrev = function(index)$/;"	m	class:SearchResults
-OBJ	Makefile	/^OBJ = main.o req_data.o xml_handler.o update_service.o cmd_args.o$/;"	m
+OBJ	Makefile	/^OBJ = main.o req_data.o xml_handler.o update_service.o cmd_args.o json_machine.o$/;"	m
 OnSearchFieldChange	doxy_doku/html/search/search.js	/^  this.OnSearchFieldChange = function(evt)$/;"	m	class:SearchBox
 OnSearchFieldFocus	doxy_doku/html/search/search.js	/^  this.OnSearchFieldFocus = function(isActive)$/;"	m	class:SearchBox
 OnSearchSelectHide	doxy_doku/html/search/search.js	/^  this.OnSearchSelectHide = function()$/;"	m	class:SearchBox
@@ -86,11 +87,13 @@ Toggle	doxy_doku/html/search/search.js	/^    this.Toggle = function(id)$/;"	m	cl
 UPDATE	cmd_args.h	39;"	d
 XML	cmd_args.h	36;"	d
 _CMD_ARGS_H	cmd_args.h	24;"	d
+_JSON_MASHINE_H	json_machine.h	25;"	d
 _REQ_DATA	req_data.h	39;"	d
 _STRUCT_H	struct.h	25;"	d
 _UPDATE_SERVICE_H	update_service.h	25;"	d
 _XML_HANDLER	xml_handler.h	25;"	d
 append	xml_handler.c	/^append(struct_news ** lst, uint16_t * position,$/;"	f
+b_dom_parser	struct.h	/^	bool b_dom_parser;$/;"	m	struct:s_adress
 b_http	struct.h	/^	bool b_http;$/;"	m	struct:s_adress
 b_json	struct.h	/^	bool b_json;$/;"	m	struct:s_adress
 b_print	struct.h	/^	bool b_print;$/;"	m	struct:s_adress
@@ -125,7 +128,7 @@ get_starttag	xml_handler.c	/^int get_starttag(const char *xml_string, const char
 get_temp_string	xml_handler.c	/^char *get_temp_string(char *xml_string, int startzeichen, int str_lenght)$/;"	f
 handle_options	cmd_args.c	/^void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)$/;"	f
 init_search	doxy_doku/html/search/search.js	/^function init_search()$/;"	f
-initial_update	update_service.c	/^void initial_update(struct_news_list ** List, uint8_t print_flag)$/;"	f
+initial_update	update_service.c	/^void initial_update(struct_news_list ** List, struct_adress ** address_options)$/;"	f
 item_name	xml_handler.c	/^char *item_name = "item";$/;"	v
 key	struct.h	/^	char *key;$/;"	m	struct:__anon1
 key_from_string	cmd_args.c	/^int key_from_string(char *argv)$/;"	f
@@ -138,22 +141,24 @@ letter_s	doxy_doku/html/classes.html	/^<tr><td rowspan="2" valign="bottom"><a na
 letter_t	doxy_doku/html/classes.html	/^<\/td><td valign="top"><a class="el" href="structs__news.html">s_news<\/a>&#160;&#160;&#160;<\/td><td rowspan="2" valign="bottom"><a name="letter_t"><\/a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&#160;&#160;t&#160;&#160;<\/div><\/td><\/tr><\/table>$/;"	a
 link	struct.h	/^	char *link;$/;"	m	struct:s_news
 link_name	xml_handler.c	/^char *link_name = "link";$/;"	v
-load_data	xml_handler.c	/^struct_news_list *load_data(char *xml_string)$/;"	f
+load_data	xml_handler.c	/^struct_news_list *load_data(struct_adress * meta_info)$/;"	f
 lookuptable	cmd_args.c	/^static type_struct lookuptable[] = {$/;"	v	file:
 main	main.c	/^int main(int argc, char **argv)$/;"	f
 next	struct.h	/^	struct s_news *next;$/;"	m	struct:s_news	typeref:struct:s_news::s_news
 option_counter	cmd_args.c	/^uint8_t option_counter = false;$/;"	v
 position	struct.h	/^	uint16_t position;$/;"	m	struct:s_news
 previous	struct.h	/^	struct s_news *previous;$/;"	m	struct:s_news	typeref:struct:s_news::s_news
+process_json	json_machine.c	/^void process_json(struct_news_list ** List, struct_adress ** address_options)$/;"	f
 pub-attribs	doxy_doku/html/structs__adress.html	/^<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"><\/a>$/;"	a
 pub-attribs	doxy_doku/html/structs__news.html	/^<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"><\/a>$/;"	a
 pub-attribs	doxy_doku/html/structs__news__list.html	/^<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"><\/a>$/;"	a
 pub-attribs	doxy_doku/html/structtype__struct.html	/^<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"><\/a>$/;"	a
-req_server	req_data.c	/^char *req_server(const struct_adress * rss_server)$/;"	f
+req_server	req_data.c	/^void req_server(struct_adress * rss_server)$/;"	f
 s_adress	struct.h	/^typedef struct s_adress {$/;"	s
 s_domain	struct.h	/^	char *s_domain;$/;"	m	struct:s_adress
 s_news	struct.h	/^typedef struct s_news {$/;"	s
 s_news_list	struct.h	/^typedef struct s_news_list {$/;"	s
+s_raw_string	struct.h	/^	char *s_raw_string;$/;"	m	struct:s_adress
 s_request	struct.h	/^	char *s_request;$/;"	m	struct:s_adress
 searchData	doxy_doku/html/search/all_0.js	/^var searchData=$/;"	v
 searchData	doxy_doku/html/search/all_1.js	/^var searchData=$/;"	v
