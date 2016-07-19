@@ -128,8 +128,10 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 						(*addr_pointer)->search_keyword =
 							strdup(*test_val);
 						argv++;
+						if((*addr_pointer)->b_print == true){
 						printf("\nKeyword found: %s\n",
 								(*addr_pointer)->search_keyword);
+						}
 					} else {
 						printf("\nError, no keyword found.\n"
 								"The command is executed by -keyword WORDXY");

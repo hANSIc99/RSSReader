@@ -26,7 +26,24 @@
 void process_json(struct_news_list ** List, struct_adress ** address_options)
 {
 
-	printf("json_mashine is here");
-	json_t *root;
-    json_error_t error;
+
+	uint16_t u16_result_1;
+	json_t *root, *js_keyword, *js_src_domain;
+	root = json_object();
+
+	printf("\n%s\n", (*address_options)->search_keyword);
+
+	if((*address_options)->search_keyword != NULL){
+	js_keyword = json_string((*address_options)->search_keyword);
+	}
+	if((*address_options)->s_domain != NULL){
+		js_src_domain = json_string((*address_options)->s_domain);
+	}
+
+
+	json_object_set(root, "keyword_1", js_keyword);
+	json_object_set(root, "source", js_src_domain);
+	
+	printf("\n%s\n", json_dumps(root, JSON_INDENT(4)));
+	printf("\nNumber of elements in the object: %d\n", json_object_size(root));
 }

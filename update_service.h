@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "json_machine.h"
+#include "json_mashine.h"
 void update_assistant(const uint16_t * milliseconds, const uint16_t * seconds);
 void initial_update(struct_news_list ** List, struct_adress ** address_options);
 uint8_t
