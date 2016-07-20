@@ -39,7 +39,7 @@ char *pub_date = "pubDate";
 char *temp_title;
 char *temp_description;
 char *temp_link;
-char *tmp_date;
+char *tmp_pub_date;
 
 /* Zählt wieviele Nachrichten im xml-String waren */
 uint16_t element_counter = 0;
@@ -99,15 +99,16 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 		if (cur_node->type == XML_ELEMENT_NODE) {
 
 			/* search for publish date */
-			if ((strncmp
+			if (strncmp
 					((char *)cur_node->name, pub_date,
-					 date_size) == 0) /*place hold */) {
+					 date_size) == 0) {
 
-
-			printf("\npupDate found!!!!!!\n");
-			printf("\n%s \n", cur_node->children->content );
-			printf("\n%d\n", tmp_date);
-
+			/* test if there is an cripple tag */
+			if((char*)cur_node->children->content != NULL){
+			tmp_pub_date = strdup((char*)cur_node->children->content) ;
+			} else {
+			tmp_pub_date = NULL;
+			}
 }
 
 
@@ -250,12 +251,12 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 						}
 
 						/* strncpy(clean_string, cur_node->children->content, startzeichen); */
-						if (READ)
+						if (READ){
 							printf
 								("Description [%d]: %s\n\n\n\n",
 								 element_counter,
 								 clean_string);
-
+						}
 						temp_description = clean_string;
 
 					} else {
@@ -267,6 +268,7 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 					append(&(list_ptr->start),
 							&element_counter, temp_title,
 							temp_link, temp_description,
+							tmp_pub_date,
 							list_ptr);
 
 				}
@@ -473,7 +475,7 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 
 	void
 		append(struct_news ** lst, uint16_t * position,
-				char *title, char *link, char *description, struct_news_list * list_ptr)
+				char *title, char *link, char *description, char *tmp_pub_date, struct_news_list * list_ptr)
 		{
 
 			struct_news *ref_ptr, *new_element;
@@ -544,6 +546,7 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 			new_element->title = title;
 			new_element->link = link;
 			new_element->description = description;
+			new_element->pub_date = tmp_pub_date;
 
 			new_element->next = NULL;	/* Das aktuelle Element ist das Ende der Liste */
 

@@ -149,6 +149,9 @@ void free_list(struct_news_list * list)
 		free(tmp_ptr->title);
 		free(tmp_ptr->description);
 		free(tmp_ptr->link);
+/*
+		free(tmp_ptr->pub_date);
+*/
 		free(tmp_ptr);
 	}
 

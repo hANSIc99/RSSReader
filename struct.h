@@ -42,6 +42,7 @@ typedef struct s_news {
 	char *title;
 	char *description;
 	char *link;
+	char *pub_date;
 
 	struct s_news *next;
 	struct s_news *previous;
