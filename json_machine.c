@@ -26,45 +26,80 @@
 void process_json(struct_news_list ** List, struct_adress ** address_options)
 {
 
-
-	uint16_t u16_result_1;
-	json_t *root, *js_keyword, *js_src_domain, *js_pub_date;
+	uint16_t u16_result_1, u16_match_counter;
+	json_t *root, *js_keyword, *js_src_domain, *js_pub_date, *js_data;
+	char *keyword_ptr, *keyword_tmp;
 	struct_news *temp_pointer;
+	js_data = json_object();
 	root = json_object();
+
+
+	json_object_set(root, "PRGRM", json_string("RSSReader"));
 
 	if((*address_options)->search_keyword != NULL){
 		js_keyword = json_string((*address_options)->search_keyword);
-		printf("\nKeywors set!" );
+		json_object_set(js_data, "keyword_1", js_keyword);
 	}
 	if((*address_options)->s_domain != NULL){
 		js_src_domain = json_string((*address_options)->s_domain);
+		json_object_set(js_data, "source", js_src_domain);
 	}
 	if((*List)->start->pub_date != NULL){
-		printf("\npub_date %s\n", (*List)->start->pub_date);
 		js_pub_date = json_string((*List)->start->pub_date);
+		json_object_set(js_data, "pub_date", js_pub_date);
 	}
 
-	json_object_set(root, "keyword_1", js_keyword);
-	json_object_set(root, "source", js_src_domain);
-	json_object_set(root, "pub_date", js_pub_date);
+	json_object_set(root, "data", js_data);
+
 	printf("\n%s\n", json_dumps(root, JSON_INDENT(4)));
 	printf("\nNumber of elements in the object: %d\n", json_object_size(root));
 
+	keyword_ptr = NULL;
 
 	for (temp_pointer = (*List)->end; temp_pointer != NULL;
 	     temp_pointer = temp_pointer->previous) {
 
 			printf("\nTitle No.: %d : %s\n", temp_pointer->position,
 			       temp_pointer->title);
-			printf("\nLink: %s\n", temp_pointer->link);
 
 			if (temp_pointer->description != NULL) {
-				printf("\nDescription: %s\n\n",
-				       temp_pointer->description);
+
+
+			compare_strings(temp_pointer->description, (*address_options)->search_keyword);	
+
+
+
+
+				printf("\ncounter: %d\n", u16_match_counter);
+				keyword_ptr = NULL;
+			
 			} else {
 				printf
 				    ("\nDescription: No description available\n\n");
 			}
 		
 	}
+}
+void compare_strings(char* string, char *keyword){
+uint64_t diffrence;
+char * ptr;
+
+	ptr = strstr(string, keyword);  
+
+				printf("\nstring_lenght %d\n", strlen(string));
+
+if(ptr != NULL){
+diffrence = (ptr - string) / sizeof(char); 
+printf("\nDiffrence: %d\n", diffrence);
+printf("\n string found!  %ul \n", string);
+printf("\nOn position: %ul \n",  ptr);
+printf("\ndiffrence without char: %ul \n",  ptr - string);
+printf("\n%s\n", string);
+#if 0
+compare_strings(ptr, keyword);
+#endif
+}
+
+
+
 }
