@@ -64,9 +64,10 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 
 			if (temp_pointer->description != NULL) {
 
-
+#if 1
 			compare_strings(temp_pointer->description, (*address_options)->search_keyword);	
-
+#endif
+			
 
 
 
@@ -82,23 +83,32 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 }
 void compare_strings(char* string, char *keyword){
 uint64_t diffrence;
-char * ptr;
+char * ptr, *tmp_string;
 
-	ptr = strstr(string, keyword);  
+tmp_string = string;	
 
-				printf("\nstring_lenght %d\n", strlen(string));
 
-if(ptr != NULL){
-diffrence = (ptr - string) / sizeof(char); 
-printf("\nDiffrence: %d\n", diffrence);
-printf("\n string found!  %ul \n", string);
-printf("\nOn position: %ul \n",  ptr);
-printf("\ndiffrence without char: %ul \n",  ptr - string);
-printf("\n%s\n", string);
-#if 0
-compare_strings(ptr, keyword);
-#endif
-}
+ptr = strstr(tmp_string, keyword);
+
+printf("\nstring: %u\n", tmp_string);
+printf("\npointer: %u\n", ptr);
+
+/* funktioniert */
+
+while(ptr  != NULL)
+{
+
+
+tmp_string = ptr + strlen(keyword) +1;
+				printf("\nkeyword found\n");
+
+printf("\nptr: %u\n", ptr);
+printf("\nstring: %u\n", tmp_string);
+ptr = strstr(tmp_string, keyword);
+}  
+
+
+
 
 
 
