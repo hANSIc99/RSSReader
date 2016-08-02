@@ -73,8 +73,8 @@ int main(int argc, char **argv)
 
 	LIBXML_TEST_VERSION handle_options(argv, &argc, &rss_addres_options);
 
-	if(rss_addres_options->b_print == true){
-	printf("%s", start_licence);
+	if (rss_addres_options->b_print == true) {
+		printf("%s", start_licence);
 	}
 
 	if (rss_addres_options != NULL) {

@@ -111,8 +111,8 @@ check_for_updates(const struct_news_list * new_list,
 		}
 
 		update_assistant(&delay_milliseconds,
-				 &(*address_options)->
-				 u16_update_interval_seconds);
+				 &
+				 (*address_options)->u16_update_interval_seconds);
 		/* If old_list was not NULL */
 		return 1;
 	} else {
