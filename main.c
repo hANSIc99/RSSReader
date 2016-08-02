@@ -67,11 +67,13 @@ int main(int argc, char **argv)
 	List2 = NULL;
 
 	rss_addres_options = malloc(sizeof(struct_adress));
-	memset(rss_addres_options, 0, sizeof(struct_adress));
+	memset(rss_addres_options, 0,
+	       sizeof(struct_adress));
 
 	set_default_options(&rss_addres_options);
 
-	LIBXML_TEST_VERSION handle_options(argv, &argc, &rss_addres_options);
+	LIBXML_TEST_VERSION handle_options(argv, &argc,
+					   &rss_addres_options);
 
 	if (rss_addres_options->b_print == true) {
 		printf("%s", start_licence);
@@ -110,9 +112,11 @@ int main(int argc, char **argv)
 				printf("\nFirst Test");
 			}
 			req_server(rss_addres_options);
-			List2 = load_data(rss_addres_options);
+			List2 =
+			    load_data(rss_addres_options);
 
-			check_for_updates(List2, List1, &rss_addres_options);
+			check_for_updates(List2, List1,
+					  &rss_addres_options);
 
 			free_list(List1);
 
@@ -124,9 +128,11 @@ int main(int argc, char **argv)
 			}
 			update_flag = 1;
 			req_server(rss_addres_options);
-			List1 = load_data(rss_addres_options);
+			List1 =
+			    load_data(rss_addres_options);
 
-			check_for_updates(List1, List2, &rss_addres_options);
+			check_for_updates(List1, List2,
+					  &rss_addres_options);
 			free_list(List2);
 
 		}

@@ -56,7 +56,8 @@ void *get_in_addr(struct sockaddr *sa)
 {
 	if (sa->sa_family == AF_INET) {
 		/* Cast: sockaddr zu sockaddr_in(6) ) */
-		return &(((struct sockaddr_in *)sa)->sin_addr);
+		return &(((struct sockaddr_in *)sa)->
+			 sin_addr);
 	}
 
 	return &(((struct sockaddr_in6 *)sa)->sin6_addr);
@@ -66,7 +67,8 @@ void req_server(struct_adress * rss_server)
 {
 
 	struct addrinfo hints, *res, *p;
-	int addr_status, sock_status, connect_status, numbytes, send_status;
+	int addr_status, sock_status, connect_status,
+	    numbytes, send_status;
 	char ipstr[INET6_ADDRSTRLEN];
 	struct sockaddr_in *port;
 	char *req;
@@ -75,21 +77,26 @@ void req_server(struct_adress * rss_server)
 	char *req3 = REQ3;
 	uint16_t u16_str_lenght = 0;
 	if (rss_server == NULL) {
-		printf("\nError: Could not find an address.");
+		printf
+		    ("\nError: Could not find an address.");
 		exit(1);
 	}
 
 	/* Ther terminating  \0 character must be added to the size in [byte] */
 	u16_str_lenght =
 	    strlen(req1) + strlen(req2) + strlen(req3) +
-	    strlen(rss_server->s_domain) + strlen(rss_server->s_request) + 1;
+	    strlen(rss_server->s_domain) +
+	    strlen(rss_server->s_request) + 1;
 #if 0
-	printf("\n string gesamt lenght: %d\n", u16_str_lenght);
+	printf("\n string gesamt lenght: %d\n",
+	       u16_str_lenght);
 	printf("\n 1 lenght: %d\n", strlen(REQ1));
 	printf("\n 2 lenght: %d\n", strlen(REQ2));
 	printf("\n 3 lenght: %d\n", strlen(REQ3));
-	printf("\n 4 lenght: %d\n", strlen(rss_server->s_domain));
-	printf("\n 5 lenght: %d\n", strlen(rss_server->s_request));
+	printf("\n 4 lenght: %d\n",
+	       strlen(rss_server->s_domain));
+	printf("\n 5 lenght: %d\n",
+	       strlen(rss_server->s_request));
 #endif
 	req = (char *)malloc(u16_str_lenght * sizeof(char));
 
@@ -133,7 +140,8 @@ void req_server(struct_adress * rss_server)
 	if ((addr_status = getaddrinfo(rss_server->s_domain
 				       /* "www.themoscowtimes.com" *//* "edition.cnn.com" *//*  "www.spiegel.de"  "rss.focus.de"  "rss.golem.de"   "www.heise.de" */
 				       , PORT, &hints, &res)) != 0) {	/* 0 bei erfolg, -1 bei Fehler */
-		fprintf(stderr, "ERROR: getaddrinfo(): %s\n",
+		fprintf(stderr,
+			"ERROR: getaddrinfo(): %s\n",
 			gai_strerror(addr_status));
 	}
 
@@ -160,18 +168,22 @@ void req_server(struct_adress * rss_server)
 			 */
 
 			struct sockaddr_in *ipv4 =
-			    (struct sockaddr_in *)p->ai_addr;
+			    (struct sockaddr_in *)p->
+			    ai_addr;
 			addr = &(ipv4->sin_addr);	/* addr zeigt jetzt auf die IPv4 Adresse des Servers */
 
 			ipver = "IPv4";
 			printf
 			    ("\nIPv4: Rohdaten vor inet_ntop(): p->ai_family: %d,  ipv4->sin_addr.s_addr: %d\n",
-			     p->ai_family, ipv4->sin_addr.s_addr);
-			printf("\nIPv4: Port-Nummer: %d\n", ipv4->sin_port);
+			     p->ai_family,
+			     ipv4->sin_addr.s_addr);
+			printf("\nIPv4: Port-Nummer: %d\n",
+			       ipv4->sin_port);
 
 		} else {	/* IPv6 */
 			struct sockaddr_in6 *ipv6 =
-			    (struct sockaddr_in6 *)p->ai_addr;
+			    (struct sockaddr_in6 *)p->
+			    ai_addr;
 			addr = &(ipv6->sin6_addr);
 			ipver = "IPv6";
 			printf
@@ -181,8 +193,10 @@ void req_server(struct_adress * rss_server)
 			int i;
 			printf("\n");
 			for (i = 0; i < 16; i++) {
-				printf("Char %u bei i = %d\n",
-				       ipv6->sin6_addr.s6_addr[i], i);
+				printf
+				    ("Char %u bei i = %d\n",
+				     ipv6->sin6_addr.
+				     s6_addr[i], i);
 			}
 		}
 
@@ -196,7 +210,8 @@ void req_server(struct_adress * rss_server)
 		 * *dst = Ziel-String
 		 * size = maximale Länge des String */
 
-		inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
+		inet_ntop(p->ai_family, addr, ipstr,
+			  sizeof ipstr);
 
 		printf("\n %s: %s\n", ipver, ipstr);
 
@@ -218,7 +233,8 @@ void req_server(struct_adress * rss_server)
 		if (DEBUG) {
 			printf
 			    ("\nParameter für socket(): %d, %d, %d\n",
-			     res->ai_family, res->ai_socktype,
+			     res->ai_family,
+			     res->ai_socktype,
 			     res->ai_protocol);
 		}
 		/* Es wird ein socket erstellt */
@@ -226,12 +242,14 @@ void req_server(struct_adress * rss_server)
 		if ((sock_status =
 		     socket(p->ai_family, p->ai_socktype,
 			    p->ai_protocol)) == -1) {
-			fprintf(stderr, "\nERROR: socket() FEHLGESCHLAGEN\n");
+			fprintf(stderr,
+				"\nERROR: socket() FEHLGESCHLAGEN\n");
 			continue;
 		} else {
 			if (DEBUG) {
-				printf("\nsocket(): sock_status = %d\n",
-				       sock_status);
+				printf
+				    ("\nsocket(): sock_status = %d\n",
+				     sock_status);
 			}
 		}
 
@@ -248,13 +266,18 @@ void req_server(struct_adress * rss_server)
 		if (DEBUG) {
 			printf
 			    ("\nParameter für connect(): %d, Port-Nummer: %d, %d\n",
-			     sock_status, htons(port->sin_port), p->ai_addrlen);
+			     sock_status,
+			     htons(port->sin_port),
+			     p->ai_addrlen);
 		}
 		if ((connect_status =
-		     connect(sock_status, p->ai_addr, p->ai_addrlen)) == -1) {
-			fprintf(stderr, "ERROR: connect() FEHLGESCHLAGEN\n");
+		     connect(sock_status, p->ai_addr,
+			     p->ai_addrlen)) == -1) {
+			fprintf(stderr,
+				"ERROR: connect() FEHLGESCHLAGEN\n");
 			close(sock_status);
-			printf("\nconnect_status = %d\n", connect_status);
+			printf("\nconnect_status = %d\n",
+			       connect_status);
 			continue;
 		} else {
 			if (DEBUG) {
@@ -268,12 +291,14 @@ void req_server(struct_adress * rss_server)
 	}
 
 	if (p == NULL) {
-		fprintf(stderr, "\nERROR: KEINE VERBINDUNG MÖGLICH\n");
+		fprintf(stderr,
+			"\nERROR: KEINE VERBINDUNG MÖGLICH\n");
 	}
 
 	/* IP-Adresse umwandeln in String */
 
-	inet_ntop(p->ai_family, get_in_addr(p->ai_addr), ipstr, sizeof ipstr);
+	inet_ntop(p->ai_family, get_in_addr(p->ai_addr),
+		  ipstr, sizeof ipstr);
 
 	if (DEBUG) {
 		printf("\nConnecting to: %s\n", ipstr);
@@ -282,7 +307,8 @@ void req_server(struct_adress * rss_server)
 	freeaddrinfo(res);
 
 	if ((send_status =
-	     send(sock_status, req, u16_str_lenght, 0)) != (u16_str_lenght)) {
+	     send(sock_status, req, u16_str_lenght,
+		  0)) != (u16_str_lenght)) {
 
 		fprintf(stderr,
 			"\nERROR: send() #1 FEHLGESCHLAGEN: Nachrichtenlänge: %d, gesendet %d\n",
@@ -304,16 +330,22 @@ void req_server(struct_adress * rss_server)
 	 */
 
 	if ((numbytes =
-	     recv(sock_status, buf, MAXDATASIZE - 1, MSG_WAITALL)) == -1) {
-		fprintf(stderr, "\nERROR: recv() FEHLGESCHLAGEN\n");
+	     recv(sock_status, buf, MAXDATASIZE - 1,
+		  MSG_WAITALL)) == -1) {
+		fprintf(stderr,
+			"\nERROR: recv() FEHLGESCHLAGEN\n");
 	}
 
 	buf[numbytes] = '\0';
 
 	if (DEBUG) {
-		printf("\nMaximale Puffergröße = %d Bytes\n", MAXDATASIZE);
-		printf("\nEmpfangende Bytes: %d\n", numbytes);
-		printf("\nEmpfangende Bytes: %d\n", numbytes);
+		printf
+		    ("\nMaximale Puffergröße = %d Bytes\n",
+		     MAXDATASIZE);
+		printf("\nEmpfangende Bytes: %d\n",
+		       numbytes);
+		printf("\nEmpfangende Bytes: %d\n",
+		       numbytes);
 #if 0
 		printf("\n DATEN: %s\n", buf);
 #endif

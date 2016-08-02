@@ -28,11 +28,13 @@
  * u16_match_counter = 1 -> 1 (!) match found !
  */
 
-void process_json(struct_news_list ** List, struct_adress ** address_options)
+void process_json(struct_news_list ** List,
+		  struct_adress ** address_options)
 {
 
 	uint16_t u16_match_counter;
-	json_t *root, *js_keyword, *js_src_domain, *js_pub_date, *js_data;
+	json_t *root, *js_keyword, *js_src_domain,
+	    *js_pub_date, *js_data;
 	char *keyword_ptr;
 	struct_news *temp_pointer;
 
@@ -40,19 +42,28 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 	js_data = json_object();
 	root = json_object();
 
-	json_object_set(root, "PRGRM", json_string("RSSReader"));
+	json_object_set(root, "PRGRM",
+			json_string("RSSReader"));
 
 	if ((*address_options)->search_keyword != NULL) {
-		js_keyword = json_string((*address_options)->search_keyword);
-		json_object_set(js_data, "keyword_1", js_keyword);
+		js_keyword =
+		    json_string((*address_options)->
+				search_keyword);
+		json_object_set(js_data, "keyword_1",
+				js_keyword);
 	}
 	if ((*address_options)->s_domain != NULL) {
-		js_src_domain = json_string((*address_options)->s_domain);
-		json_object_set(js_data, "source", js_src_domain);
+		js_src_domain =
+		    json_string((*address_options)->
+				s_domain);
+		json_object_set(js_data, "source",
+				js_src_domain);
 	}
 	if ((*List)->start->pub_date != NULL) {
-		js_pub_date = json_string((*List)->start->pub_date);
-		json_object_set(js_data, "pub_date", js_pub_date);
+		js_pub_date =
+		    json_string((*List)->start->pub_date);
+		json_object_set(js_data, "pub_date",
+				js_pub_date);
 	}
 
 	json_object_set(root, "data", js_data);
@@ -63,23 +74,27 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 
 	keyword_ptr = NULL;
 
-	for (temp_pointer = (*List)->end; temp_pointer != NULL;
+	for (temp_pointer = (*List)->end;
+	     temp_pointer != NULL;
 	     temp_pointer = temp_pointer->previous) {
 
-		printf("\nTitle No.: %d : %s\n", temp_pointer->position,
+		printf("\nTitle No.: %d : %s\n",
+		       temp_pointer->position,
 		       temp_pointer->title);
 
-		if ((keyword_ptr = temp_pointer->description) != NULL) {
+		if ((keyword_ptr =
+		     temp_pointer->description) != NULL) {
 
 			u16_match_counter =
 			    u16_keywrd_counter(keyword_ptr,
-					       (*address_options)->
-					       search_keyword);
+					       (*address_options)->search_keyword);
 
-			printf("\nkeyword_counter: %d\n", u16_match_counter);
+			printf("\nkeyword_counter: %d\n",
+			       u16_match_counter);
 
 		} else {
-			printf("\nDescription: No description available\n\n");
+			printf
+			    ("\nDescription: No description available\n\n");
 		}
 		u16_match_counter = 0;
 
@@ -93,12 +108,12 @@ uint16_t u16_keywrd_counter(char *source, char *keyword)
 	char pre_src;
 	char post_src;
 
-	while ((source = strstr(source, keyword)) != NULL) {
+	while ((source =
+		strcasestr(source, keyword)) != NULL) {
 		pre_src = *(source - 1);
 		post_src = *(source + strlen(keyword));
 
 		if ((pre_src == ' ') && (post_src == ' ')) {
-			printf("\nKeyword found alone\n");
 			u16_match_counter++;
 		}
 		source = source + strlen(keyword) + 1;

@@ -44,7 +44,8 @@ char *tmp_pub_date;
 /* Zählt wieviele Nachrichten im xml-String waren */
 uint16_t element_counter = 0;
 
-int dom_parser(const char *content, int length, struct_news_list * list_ptr)
+int dom_parser(const char *content, int length,
+	       struct_news_list * list_ptr)
 {
 
 	xmlDocPtr doc;		/* the resulting document tree */
@@ -55,11 +56,12 @@ int dom_parser(const char *content, int length, struct_news_list * list_ptr)
 	 * and the "noname.xml" argument will serve as its base.
 	 */
 	doc =
-	    xmlReadMemory(content, length, "noname.xml", NULL,
-			  XML_PARSE_NOERROR /* 0 */ );
+	    xmlReadMemory(content, length, "noname.xml",
+			  NULL, XML_PARSE_NOERROR /* 0 */ );
 
 	if (doc == NULL) {
-		fprintf(stderr, "Failed to parse document\n");
+		fprintf(stderr,
+			"Failed to parse document\n");
 		return 1;
 	}
 
@@ -81,11 +83,13 @@ int dom_parser(const char *content, int length, struct_news_list * list_ptr)
 	return 0;
 }
 
-void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
+void get_dom_objects(xmlNode * a_node,
+		     struct_news_list * list_ptr)
 {
 	xmlNode *cur_node = NULL;
 
-	uint16_t title_size, link_size, description_size, item_size, date_size;
+	uint16_t title_size, link_size, description_size,
+	    item_size, date_size;
 
 	title_size = strlen(title_name);
 	link_size = strlen(link_name);
@@ -93,21 +97,25 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 	item_size = strlen(item_name);
 	date_size = strlen(pub_date);
 
-	for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+	for (cur_node = a_node; cur_node;
+	     cur_node = cur_node->next) {
 		/* Typ: XML_ELEMENT_NODE */
 
 		if (cur_node->type == XML_ELEMENT_NODE) {
 
 			/* search for publish date */
 			if (strncmp
-			    ((char *)cur_node->name, pub_date,
-			     date_size) == 0) {
+			    ((char *)cur_node->name,
+			     pub_date, date_size) == 0) {
 
 				/* test if there is an cripple tag */
-				if ((char *)cur_node->children->content != NULL) {
+				if ((char *)cur_node->
+				    children->content !=
+				    NULL) {
 					tmp_pub_date =
-					    strdup((char *)cur_node->children->
-						   content);
+					    strdup((char *)
+						   cur_node->
+						   children->content);
 				} else {
 					tmp_pub_date = NULL;
 				}
@@ -116,68 +124,80 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 			/* Wenn der Name ,,title" entspricht */
 
 			if (strncmp
-			    ((char *)cur_node->name, title_name,
-			     title_size) == 0) {
+			    ((char *)cur_node->name,
+			     title_name, title_size) == 0) {
 
 				/* Wenn Parent = ,,item" entspricht */
 
 				if (strncmp
-				    ((char *)cur_node->parent->name,
-				     item_name, item_size) == 0) {
+				    ((char *)cur_node->
+				     parent->name,
+				     item_name,
+				     item_size) == 0) {
 
 					element_counter++;
 
 					/* test if there is an cripple array */
-					if (cur_node->children != NULL) {
+					if (cur_node->
+					    children !=
+					    NULL) {
 						if (READ)
 							printf
 							    ("Title [%d]: %s\n\n",
 							     element_counter,
-							     cur_node->
-							     children->content);
+							     cur_node->children->
+							     content);
 
 						/* Es wird immer wieder die Startadresse übergeben */
 
-						temp_title = strdup((char *)
-								    cur_node->children->content);
+						temp_title =
+						    strdup((char *)
+							   cur_node->children->content);
 
 					} else {
 						if (DEBUG)
 							printf
 							    ("\nTitle-array will be set to NULL");
-						temp_title = NULL;
+						temp_title =
+						    NULL;
 					}
 				}
 			}
 
 			/* Wenn der Name ,,link" entspricht */
 			if (strncmp
-			    ((char *)cur_node->name, link_name,
-			     link_size) == 0) {
+			    ((char *)cur_node->name,
+			     link_name, link_size) == 0) {
 
 				/* Wenn Parent = ,,item" entspricht */
 
 				if (strncmp
-				    ((char *)cur_node->parent->name,
-				     item_name, item_size) == 0) {
+				    ((char *)cur_node->
+				     parent->name,
+				     item_name,
+				     item_size) == 0) {
 
 					/* test if there is a cripple xml tag */
-					if (cur_node->children != NULL) {
+					if (cur_node->
+					    children !=
+					    NULL) {
 
 						if (READ)
 							printf
 							    ("Link [%d]: %s\n\n",
 							     element_counter,
-							     cur_node->
-							     children->content);
+							     cur_node->children->
+							     content);
 
-						temp_link = strdup((char *)
-								   cur_node->children->content);
+						temp_link =
+						    strdup((char *)
+							   cur_node->children->content);
 					} else {
 						if (DEBUG)
 							printf
 							    ("\nLink-array will be set to NULL");
-						temp_link = NULL;
+						temp_link =
+						    NULL;
 					}
 				}
 
@@ -185,50 +205,55 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 
 			/* Wenn der Name ,,description" entspricht */
 			if (strncmp
-			    ((char *)cur_node->name, description_name,
+			    ((char *)cur_node->name,
+			     description_name,
 			     description_size) == 0) {
 
 				/* Wenn Parent = ,,item" entspricht */
 
 				if (strncmp
-				    ((char *)cur_node->parent->name,
-				     item_name, item_size) == 0) {
-					char *clean_string, *markup_start;
-					int startzeichen, string_lenght;
+				    ((char *)cur_node->
+				     parent->name,
+				     item_name,
+				     item_size) == 0) {
+					char *clean_string,
+					    *markup_start;
+					int startzeichen,
+					    string_lenght;
 					startzeichen = 0;
-					markup_start = MARKUP_START;
+					markup_start =
+					    MARKUP_START;
 
 					/* test if there is a cripple xml tag */
-					if (cur_node->children != NULL) {
+					if (cur_node->
+					    children !=
+					    NULL) {
 
 						/* test if it is markup in the string */
 
-						startzeichen = strstr((char *)
-								      cur_node->
-								      children->
-								      content,
-								      markup_start)
-						    - (char *)
-						    &cur_node->children->
-						    content;
+						startzeichen
+						    =
+						    strstr((char *)
+							   cur_node->children->content, markup_start)
+						    -
+						    (char *)
+						    &cur_node->children->content;
 						if (startzeichen > 0) {
 							if (DEBUG)
 								printf
 								    ("\nStartzeichen gefunden bei: %d\n",
 								     startzeichen);
-							clean_string =
-							    malloc((startzeichen
-								    +
-								    1) *
-								   sizeof(char)
-								   /* valgrind */
+							clean_string
+							    =
+							    malloc
+							    ((startzeichen + 1) * sizeof(char)
+							     /* valgrind */
 							    );
-							strncpy(clean_string,
-								(char *)
-								cur_node->
-								children->
-								content,
-								startzeichen);
+							strncpy
+							    (clean_string,
+							     (char
+							      *)
+							     cur_node->children->content, startzeichen);
 
 						} else {
 							if (DEBUG)
@@ -236,25 +261,27 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 								    ("\nStartzeichen ist null oder kleiner als null: %d\n",
 								     startzeichen);
 
-							string_lenght =
-							    strlen((char *)
-								   cur_node->
-								   children->
-								   content);
+							string_lenght
+							    =
+							    strlen
+							    ((char *)
+							     cur_node->children->content);
 
-							clean_string =
-							    malloc((string_lenght + 1) * sizeof(char)
-								   /* valgrind */
+							clean_string
+							    =
+							    malloc
+							    ((string_lenght + 1) * sizeof(char)
+							     /* valgrind */
 							    );
 
-							strncpy(clean_string,
-								(char *)
-								cur_node->
-								children->
-								content,
-								string_lenght);
+							strncpy
+							    (clean_string,
+							     (char
+							      *)
+							     cur_node->children->content, string_lenght);
 							clean_string
-							    [string_lenght] =
+							    [string_lenght]
+							    =
 							    '\0';
 						}
 
@@ -265,25 +292,34 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 							     element_counter,
 							     clean_string);
 						}
-						temp_description = clean_string;
+						temp_description
+						    =
+						    clean_string;
 
 					} else {
 
-						temp_description = NULL;
+						temp_description
+						    = NULL;
 
 					}
 
-					append(&(list_ptr->start),
-					       &element_counter, temp_title,
-					       temp_link, temp_description,
-					       tmp_pub_date, list_ptr);
+					append(&
+					       (list_ptr->
+						start),
+					       &element_counter,
+					       temp_title,
+					       temp_link,
+					       temp_description,
+					       tmp_pub_date,
+					       list_ptr);
 
 				}
 
 			}
 
 			/* REKURSIVE FUNKTION! */
-			get_dom_objects(cur_node->children, list_ptr);
+			get_dom_objects(cur_node->children,
+					list_ptr);
 			/* Ende for-Schleife */
 		}
 	}
@@ -292,7 +328,8 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 struct_news_list *load_data(struct_adress * meta_info)
 {
 
-	int gesamtlaenge, counter2, startzeichen, str_lenght;
+	int gesamtlaenge, counter2, startzeichen,
+	    str_lenght;
 	uint16_t u16_counter;
 	char *end_tag = RSS_END;
 	char *start_tag = RSS_START;
@@ -311,25 +348,34 @@ struct_news_list *load_data(struct_adress * meta_info)
 	gesamtlaenge = strlen(meta_info->s_raw_string);
 
 	if (DEBUG) {
-		printf("\nLänge des String: %d\n", gesamtlaenge);
+		printf("\nLänge des String: %d\n",
+		       gesamtlaenge);
 
-		for (counter2 = 0; counter2 < 20; counter2++) {
-			printf("\nBuchtabe %d : ", counter2);
-			printf("%c", meta_info->s_raw_string[counter2]);
+		for (counter2 = 0; counter2 < 20;
+		     counter2++) {
+			printf("\nBuchtabe %d : ",
+			       counter2);
+			printf("%c",
+			       meta_info->
+			       s_raw_string[counter2]);
 		}
 	}
 
 	/* Position des Startzeichens im array holen */
-	startzeichen = get_starttag(meta_info->s_raw_string, start_tag);
+	startzeichen =
+	    get_starttag(meta_info->s_raw_string,
+			 start_tag);
 
-	if ((startzeichen >= gesamtlaenge) || (startzeichen <= 0)) {
+	if ((startzeichen >= gesamtlaenge)
+	    || (startzeichen <= 0)) {
 		printf("\nServer query failed\n");
 		exit(1);
 	}
 
 	if (DEBUG)
-		printf("\nAnfangszeichen gefunden an Stelle %d\n",
-		       startzeichen);
+		printf
+		    ("\nAnfangszeichen gefunden an Stelle %d\n",
+		     startzeichen);
 
 	/* Neue Länge des Strings */
 	str_lenght = gesamtlaenge - startzeichen;
@@ -340,18 +386,21 @@ struct_news_list *load_data(struct_adress * meta_info)
 	server_info = malloc(startzeichen + 1);
 
 	if (DEBUG)
-		printf("\nNeue Länge des Strings: %d\n", str_lenght);
+		printf("\nNeue Länge des Strings: %d\n",
+		       str_lenght);
 
 	/* String temp mit XML-Daten erzeugen */
 
 	temp =
-	    get_temp_string(meta_info->s_raw_string, startzeichen, str_lenght);
+	    get_temp_string(meta_info->s_raw_string,
+			    startzeichen, str_lenght);
 
 	/* String server_info mit den am Anfang gesendeten Serverdaten erzeugen */
 
 	/* rest vom temp String entfernen */
 
-	rss_string = get_rss_tag(temp, end_tag, &str_lenght);
+	rss_string =
+	    get_rss_tag(temp, end_tag, &str_lenght);
 
 	free(temp);
 	free(server_info);
@@ -360,35 +409,44 @@ struct_news_list *load_data(struct_adress * meta_info)
 	if (DEBUG) {
 		printf(" \nFor-Schleife load_data\n");
 		for (u16_counter = (strlen(rss_string) - 1);
-		     u16_counter > strlen(rss_string) - 20; u16_counter--) {
-			printf("\nBuchtabe %d : ", u16_counter);
-			printf("%c", rss_string[u16_counter]);
+		     u16_counter > strlen(rss_string) - 20;
+		     u16_counter--) {
+			printf("\nBuchtabe %d : ",
+			       u16_counter);
+			printf("%c",
+			       rss_string[u16_counter]);
 		}
 
-		printf("\nInteger load_data strlen rss_lenght: %d\n",
-		       (int)strlen(rss_string));
+		printf
+		    ("\nInteger load_data strlen rss_lenght: %d\n",
+		     (int)strlen(rss_string));
 		printf("\nZeichen bei str_lenght %d : %c\n",
 		       (int)strlen(rss_string),
 		       rss_string[(int)strlen(rss_string)]);
 		printf("\nZeichen bei position %d : %c\n",
 		       (int)(strlen(rss_string) - 1),
-		       rss_string[(strlen(rss_string) - 1)]);
+		       rss_string[(strlen(rss_string) -
+				   1)]);
 	}
 #endif
 	if (meta_info->b_dom_parser == true) {
-		if ((dom_parser(rss_string, (strlen(rss_string)), lists)) == 0) {
+		if ((dom_parser
+		     (rss_string, (strlen(rss_string)),
+		      lists)) == 0) {
 
 			free(rss_string);
 
 			if (DEBUG)
-				printf("\nexamplefunc succeed\n");
+				printf
+				    ("\nexamplefunc succeed\n");
 
 			return lists;
 		} else {
 			free(rss_string);
 			free(lists);
 			if (DEBUG)
-				printf("\nexamplefunc failed\n");
+				printf
+				    ("\nexamplefunc failed\n");
 			return NULL;
 		}
 	} else {
@@ -398,7 +456,8 @@ struct_news_list *load_data(struct_adress * meta_info)
 	}
 }
 
-char *get_temp_string(char *xml_string, int startzeichen, int str_lenght)
+char *get_temp_string(char *xml_string, int startzeichen,
+		      int str_lenght)
 {
 	/* str_lenght = neue länge */
 	char *temp2, *temp3;
@@ -406,7 +465,9 @@ char *get_temp_string(char *xml_string, int startzeichen, int str_lenght)
 	/* str_lenght = overall lenght - start-sign */
 
 	temp2 = malloc((str_lenght + 1) * sizeof(char));
-	temp3 = xml_string + (size_t) ((startzeichen) / sizeof(char));
+	temp3 =
+	    xml_string +
+	    (size_t) ((startzeichen) / sizeof(char));
 
 	strncpy(temp2, temp3, (str_lenght + 1));
 	return temp2;
@@ -423,7 +484,8 @@ char *get_server_info(char *xml_string, int startzeichen)
 	return server_info;
 }
 
-char *get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght)
+char *get_rss_tag(char *temp_string, char *end_tag,
+		  const int *str_lenght)
 {
 	uint16_t counter, tag_lenght, rss_lenght;
 	char *check_tag;
@@ -433,18 +495,22 @@ char *get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght)
 	check_tag = malloc(tag_lenght);
 
 	if (DEBUG) {
-		printf("\nInteger str_lenght: %d\n", *str_lenght);
-		printf("\nInteger tag_lenght: %d\n", tag_lenght);
+		printf("\nInteger str_lenght: %d\n",
+		       *str_lenght);
+		printf("\nInteger tag_lenght: %d\n",
+		       tag_lenght);
 	}
 
 	for (counter = *str_lenght; counter > 0; counter--) {
 
 		strncpy(check_tag,
 			temp_string + (size_t) (counter -
-						tag_lenght), tag_lenght);
+						tag_lenght),
+			tag_lenght);
 
 		/* Vergleichen ob end_tag und check_tag übereinstimmen */
-		if (strncmp(check_tag, end_tag, tag_lenght) == 0) {
+		if (strncmp(check_tag, end_tag, tag_lenght)
+		    == 0) {
 			rss_lenght = counter;
 			if (DEBUG)
 				printf
@@ -456,34 +522,40 @@ char *get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght)
 	}
 	free(check_tag);
 	/* endgültiger String wird erstellt, Ende (unbrauchbar) wird entfernt */
-	rss_string = malloc((rss_lenght + 1) * sizeof(char));
+	rss_string =
+	    malloc((rss_lenght + 1) * sizeof(char));
 	memset(rss_string, 0, sizeof(rss_lenght + 1));
 	strncpy(rss_string, temp_string, rss_lenght);
 
 	/* Das letzte Zeichen muss manuel auf \0 gesetzt werden */
 	rss_string[rss_lenght] = '\0';
 	if (DEBUG)
-		printf("\nInteger rss_lenght: %d\n", rss_lenght);
+		printf("\nInteger rss_lenght: %d\n",
+		       rss_lenght);
 
 	return rss_string;
 }
 
-int get_starttag(const char *xml_string, const char *start_tag)
+int get_starttag(const char *xml_string,
+		 const char *start_tag)
 {
 
 	size_t startzeichen;
 
 	startzeichen =
-	    (size_t) strstr(xml_string, start_tag) - (size_t) xml_string;
+	    (size_t) strstr(xml_string,
+			    start_tag) -
+	    (size_t) xml_string;
 	if (DEBUG)
-		printf("\nStartzeichen gefunden bei: %lu\n", startzeichen);
+		printf("\nStartzeichen gefunden bei: %lu\n",
+		       startzeichen);
 	return startzeichen;
 }
 
 void
 append(struct_news ** lst, uint16_t * position,
-       char *title, char *link, char *description, char *tmp_pub_date,
-       struct_news_list * list_ptr)
+       char *title, char *link, char *description,
+       char *tmp_pub_date, struct_news_list * list_ptr)
 {
 
 	struct_news *ref_ptr, *new_element;
