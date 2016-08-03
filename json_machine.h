@@ -31,6 +31,7 @@
 #include <string.h>
 #include <jansson.h>
 #include <ctype.h>
+#include <time.h>
 
 void process_json(struct_news_list ** List, struct_adress ** address_options);
 uint16_t u16_keywrd_counter(char *, char *);

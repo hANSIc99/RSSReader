@@ -34,8 +34,11 @@ void process_json(struct_news_list ** List,
 
 	uint16_t u16_match_counter;
 	json_t *root, *js_keyword, *js_src_domain,
-	    *js_pub_date, *js_data;
+	    *js_pub_date, *js_data, *js_sys_time, 
+	    *js_matches;
 	char *keyword_ptr;
+	time_t sys_time;
+	json_int_t js_sys_time_t;
 	struct_news *temp_pointer;
 
 	u16_match_counter = 0;
@@ -44,6 +47,11 @@ void process_json(struct_news_list ** List,
 
 	json_object_set(root, "PRGRM",
 			json_string("RSSReader"));
+
+	
+	time(&sys_time);
+  	js_sys_time = json_integer(sys_time);
+
 
 	if ((*address_options)->search_keyword != NULL) {
 		js_keyword =
@@ -65,6 +73,9 @@ void process_json(struct_news_list ** List,
 		json_object_set(js_data, "pub_date",
 				js_pub_date);
 	}
+	
+	json_object_set(js_data, "sys_time", js_sys_time);
+
 
 	json_object_set(root, "data", js_data);
 
