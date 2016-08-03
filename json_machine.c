@@ -23,93 +23,99 @@
 
 #include "json_machine.h"
 
+#define DEBUG 0
 /*
  * u16_match_counter = 0 -> discription available, no keyword found
  * u16_match_counter = 1 -> 1 (!) match found !
  */
 
-void process_json(struct_news_list ** List,
-		  struct_adress ** address_options)
+void process_json(struct_news_list ** List, struct_adress ** address_options)
 {
 
-	uint16_t u16_match_counter;
+	uint16_t u16_match_counter[MAX_SEARCHKEYWORDS];
+	uint8_t u8_keyword_counter = 0;
 	json_t *root, *js_keyword, *js_src_domain,
-	    *js_pub_date, *js_data, *js_sys_time, 
-	    *js_matches;
+	    *js_pub_date, *js_data, *js_sys_time, *js_matches, *js_kwrd_array;
 	char *keyword_ptr;
 	time_t sys_time;
-	json_int_t js_sys_time_t;
 	struct_news *temp_pointer;
 
-	u16_match_counter = 0;
+	for (u8_keyword_counter = 0; u8_keyword_counter < MAX_SEARCHKEYWORDS;
+	     ++u8_keyword_counter) {
+		u16_match_counter[u8_keyword_counter] = 0;
+	}
+
 	js_data = json_object();
 	root = json_object();
+	js_kwrd_array = json_array();
 
-	json_object_set(root, "PRGRM",
-			json_string("RSSReader"));
-
-	
-	time(&sys_time);
-  	js_sys_time = json_integer(sys_time);
-
-
-	if ((*address_options)->search_keyword != NULL) {
-		js_keyword =
-		    json_string((*address_options)->
-				search_keyword);
-		json_object_set(js_data, "keyword_1",
-				js_keyword);
-	}
-	if ((*address_options)->s_domain != NULL) {
-		js_src_domain =
-		    json_string((*address_options)->
-				s_domain);
-		json_object_set(js_data, "source",
-				js_src_domain);
-	}
-	if ((*List)->start->pub_date != NULL) {
-		js_pub_date =
-		    json_string((*List)->start->pub_date);
-		json_object_set(js_data, "pub_date",
-				js_pub_date);
-	}
-	
-	json_object_set(js_data, "sys_time", js_sys_time);
-
+	json_object_set(root, "PRGRM", json_string("RSSReader"));
 
 	json_object_set(root, "data", js_data);
 
-	printf("\n%s\n", json_dumps(root, JSON_INDENT(4)));
-	printf("\nNumber of elements in the object: %d\n",
-	       (int)json_object_size(root));
+	time(&sys_time);
+	js_sys_time = json_integer(sys_time);
+
+	if ((*address_options)->s_domain != NULL) {
+		js_src_domain = json_string((*address_options)->s_domain);
+		json_object_set(js_data, "source", js_src_domain);
+	}
+	if ((*List)->start->pub_date != NULL) {
+		js_pub_date = json_string((*List)->start->pub_date);
+		json_object_set(js_data, "pub_date", js_pub_date);
+	}
+
+	json_object_set(js_data, "sys_time", js_sys_time);
+
 
 	keyword_ptr = NULL;
 
 	for (temp_pointer = (*List)->end;
-	     temp_pointer != NULL;
-	     temp_pointer = temp_pointer->previous) {
-
-		printf("\nTitle No.: %d : %s\n",
-		       temp_pointer->position,
-		       temp_pointer->title);
-
-		if ((keyword_ptr =
-		     temp_pointer->description) != NULL) {
-
-			u16_match_counter =
-			    u16_keywrd_counter(keyword_ptr,
-					       (*address_options)->search_keyword);
-
-			printf("\nkeyword_counter: %d\n",
-			       u16_match_counter);
-
-		} else {
-			printf
-			    ("\nDescription: No description available\n\n");
+	     temp_pointer != NULL; temp_pointer = temp_pointer->previous) {
+		if (DEBUG) {
+			printf("\nTitle No.: %d : %s\n",
+			       temp_pointer->position, temp_pointer->title);
 		}
-		u16_match_counter = 0;
+		if ((keyword_ptr = temp_pointer->description) != NULL) {
+
+			for (u8_keyword_counter = 0;
+			     ((*address_options)->search_keyword
+			      [u8_keyword_counter]) != NULL;
+			     ++u8_keyword_counter) {
+
+				u16_match_counter[u8_keyword_counter] +=
+				    u16_keywrd_counter(keyword_ptr,
+						       (*address_options)->search_keyword
+						       [u8_keyword_counter]);
+
+			}
+		}
+	}
+
+	/* Creating the JSON Array with the results of the search function 
+	 */
+	for (u8_keyword_counter = 0;
+	     ((*address_options)->search_keyword[u8_keyword_counter]) != NULL;
+	     ++u8_keyword_counter) {
+
+		js_keyword = json_object();
+		json_object_set(js_keyword, "s_keyword",
+				json_string((*address_options)->search_keyword
+					    [u8_keyword_counter]));
+
+		js_matches = json_integer((json_int_t)
+					  u16_match_counter
+					  [u8_keyword_counter]);
+		json_object_set(js_keyword, "u16_result", js_matches);
+
+		json_array_append(js_kwrd_array, js_keyword);
 
 	}
+
+	json_object_set(js_data, "result", js_kwrd_array);
+
+	printf("\n%s\n", json_dumps(root, JSON_INDENT(4)));
+
 }
 
 uint16_t u16_keywrd_counter(char *source, char *keyword)
@@ -119,8 +125,7 @@ uint16_t u16_keywrd_counter(char *source, char *keyword)
 	char pre_src;
 	char post_src;
 
-	while ((source =
-		strcasestr(source, keyword)) != NULL) {
+	while ((source = strcasestr(source, keyword)) != NULL) {
 		pre_src = *(source - 1);
 		post_src = *(source + strlen(keyword));
 

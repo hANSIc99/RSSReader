@@ -26,31 +26,24 @@
 #define DELAY_CON_LOST 10;
 #define DEBUG 0
 
-void initial_update(struct_news_list ** List,
-		    struct_adress ** address_options)
+void initial_update(struct_news_list ** List, struct_adress ** address_options)
 {
 
 	struct_news *temp_pointer;
 
 	for (temp_pointer = (*List)->end;
-	     temp_pointer != NULL;
-	     temp_pointer = temp_pointer->previous) {
+	     temp_pointer != NULL; temp_pointer = temp_pointer->previous) {
 
 		if (((*address_options)->b_print == true)
-		    && ((*address_options)->b_json ==
-			false)) {
+		    && ((*address_options)->b_json == false)) {
 			printf("\nTitle No.: %d : %s\n",
-			       temp_pointer->position,
-			       temp_pointer->title);
-			printf("\nLink: %s\n",
-			       temp_pointer->link);
+			       temp_pointer->position, temp_pointer->title);
+			printf("\nLink: %s\n", temp_pointer->link);
 
-			if (temp_pointer->description !=
-			    NULL) {
+			if (temp_pointer->description != NULL) {
 				printf
 				    ("\nDescription: %s\n\n",
-				     temp_pointer->
-				     description);
+				     temp_pointer->description);
 			} else {
 				printf
 				    ("\nDescription: No description available\n\n");
@@ -77,49 +70,33 @@ check_for_updates(const struct_news_list * new_list,
 	if (old_list != NULL) {
 
 		for (str_ptr = new_list->start;
-		     str_ptr != NULL;
-		     str_ptr = str_ptr->next) {
+		     str_ptr != NULL; str_ptr = str_ptr->next) {
 
 			if (DEBUG) {
 				printf
 				    ("\nresult of strcmp = %d\n",
-				     strncmp((str_ptr->
-					      title),
-					     (old_list->
-					      start->title),
-					     (strlen
-					      (new_list->
-					       start->
-					       title))));
+				     strncmp((str_ptr->title),
+					     (old_list->start->title),
+					     (strlen(new_list->start->title))));
 			}
-			if (strcmp
-			    (str_ptr->title,
-			     old_list->start->title) != 0) {
+			if (strcmp(str_ptr->title, old_list->start->title) != 0) {
 
-				if ((*address_options)->
-				    b_print != 0) {
+				if ((*address_options)->b_print != 0) {
 
-					if (str_ptr->
-					    title != NULL) {
+					if (str_ptr->title != NULL) {
 						printf
 						    ("\nNew headline:\n%s\n\n",
-						     str_ptr->
-						     title);
+						     str_ptr->title);
 					}
-					if (str_ptr->link !=
-					    NULL) {
+					if (str_ptr->link != NULL) {
 						printf
 						    ("\nLink: %s\n",
-						     str_ptr->
-						     link);
+						     str_ptr->link);
 					}
-					if (str_ptr->
-					    description !=
-					    NULL) {
+					if (str_ptr->description != NULL) {
 						printf
 						    ("\nDescription: %s\n\n",
-						     str_ptr->
-						     description);
+						     str_ptr->description);
 					}
 				}
 #if 0
@@ -138,22 +115,19 @@ check_for_updates(const struct_news_list * new_list,
 
 		update_assistant(&delay_milliseconds,
 				 &
-				 (*address_options)->
-				 u16_update_interval_seconds);
+				 (*address_options)->u16_update_interval_seconds);
 		/* If old_list was not NULL */
 		return 1;
 	} else {
 
-		update_assistant(&delay_milliseconds,
-				 &delay_connection_lost);
+		update_assistant(&delay_milliseconds, &delay_connection_lost);
 		return 0;
 	}
 /* if old_list was 0 */
 
 }
 
-void update_assistant(const uint16_t * milliseconds,
-		      const uint16_t * seconds)
+void update_assistant(const uint16_t * milliseconds, const uint16_t * seconds)
 {
 
 	uint32_t u32_nano_seconds;

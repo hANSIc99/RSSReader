@@ -25,7 +25,8 @@
 
 #define DEBUG 0
 
-uint8_t option_counter = false;
+uint8_t u8_option_counter = false;
+uint8_t u8_keyword_counter;
 
 static type_struct lookuptable[] = {
 	{"DOM", DOM},
@@ -38,8 +39,7 @@ static type_struct lookuptable[] = {
 	{"JSON", JSON}
 };
 
-void handle_options(char **argv, int *argc,
-		    struct_adress ** addr_pointer)
+void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 {
 
 	/* hier prüfen wie viele adressen eingegeben wurden */
@@ -51,137 +51,104 @@ void handle_options(char **argv, int *argc,
 		/* option counter nicht global machen */
 		test_arg(argv);
 
-		if (option_counter != 0) {
+		if (u8_option_counter != 0) {
 
 			switch (key_from_string(*argv)) {
 			case DOM:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption DOM = true");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption DOM = true");
 				}
-				(*addr_pointer)->
-				    b_dom_parser = true;
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				(*addr_pointer)->b_dom_parser = true;
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case DOM_LONG:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption DOM_LONG = true");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption DOM_LONG = true");
 				}
-				(*addr_pointer)->
-				    b_dom_parser = true;
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				(*addr_pointer)->b_dom_parser = true;
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case XML:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption XML = true\n");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption XML = true\n");
 				}
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case HTTP:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption HTTP = true\n");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption HTTP = true\n");
 				}
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case PRINT:
-				printf
-				    ("\noption PRINT = true\n");
-				(*addr_pointer)->b_print =
-				    true;
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				printf("\noption PRINT = true\n");
+				(*addr_pointer)->b_print = true;
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case UPDATE:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption UPDATE = true\n");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption UPDATE = true\n");
 				}
 				test_val = argv;
 				test_val++;
-				(*addr_pointer)->b_update =
-				    true;
+				(*addr_pointer)->b_update = true;
 				if ((*test_val) != NULL) {
-					(*addr_pointer)->
-					    u16_update_interval_seconds
-					    =
-					    strtol((*test_val), NULL, 10);
+					(*addr_pointer)->u16_update_interval_seconds = strtol((*test_val), NULL, 10);
 				}
-				if ((*addr_pointer)->
-				    u16_update_interval_seconds
+				if ((*addr_pointer)->u16_update_interval_seconds
 				    == 0) {
 					printf
 					    ("\nNo correct interval found, default will be 60 seconds.\n");
-					(*addr_pointer)->
-					    u16_update_interval_seconds
-					    = 60;
+					(*addr_pointer)->u16_update_interval_seconds = 60;
 				} else {
 					printf
 					    ("\nUpdate interval: %d seconds\n",
-					     ((*addr_pointer)->u16_update_interval_seconds));
+					     ((*addr_pointer)->
+					      u16_update_interval_seconds));
 					argv++;
 				}
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case KEYWORD:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption KEYWORD = true\n");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption KEYWORD = true\n");
 				}
 				test_val = argv;
 				test_val++;
 				if (((*test_val) != NULL)
-				    && (((*test_val)[0]) !=
-					'-')) {
-					(*addr_pointer)->
-					    search_keyword =
-					    strdup
-					    (*test_val);
+				    && (((*test_val)[0]) != '-')) {
+					(*addr_pointer)->search_keyword
+					    [u8_keyword_counter] =
+					    strdup(*test_val);
 					argv++;
 					if ((*addr_pointer)->b_print == true) {
 						printf
 						    ("\nKeyword found: %s\n",
-						     (*addr_pointer)->search_keyword);
+						     (*addr_pointer)->
+						     search_keyword[u8_keyword_counter]);
 					}
+					++u8_keyword_counter;
 				} else {
 					printf
 					    ("\nError, no keyword found.\n"
 					     "The command is executed by -keyword WORDXY");
 				}
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 			case JSON:
-				if ((*addr_pointer)->
-				    b_print == true) {
-					printf
-					    ("\noption JSON = true\n");
+				if ((*addr_pointer)->b_print == true) {
+					printf("\noption JSON = true\n");
 				}
-				(*addr_pointer)->b_json =
-				    true;
-				option_counter = 0;
-				handle_options(argv, argc,
-					       addr_pointer);
+				(*addr_pointer)->b_json = true;
+				u8_option_counter = 0;
+				handle_options(argv, argc, addr_pointer);
 				break;
 
 			case BADARG:
@@ -195,20 +162,16 @@ void handle_options(char **argv, int *argc,
 		} else {
 			/* recursive implementation */
 
-			addr_pointer =
-			    get_server_address(*argv,
-					       addr_pointer);
+			addr_pointer = get_server_address(*argv, addr_pointer);
 			if (addr_pointer == NULL) {
-				printf
-				    ("\nServer address query failed\n");
+				printf("\nServer address query failed\n");
 				exit(1);
 			}
 
 		}
 
 	} else {
-		printf
-		    ("\nAt least a valid server address is needed!\n");
+		printf("\nAt least a valid server address is needed!\n");
 		exit(1);
 	}
 
@@ -218,7 +181,7 @@ void test_arg(char **argv)
 {
 	if (((*argv)[0]) == '-') {
 
-		option_counter++;
+		u8_option_counter++;
 		*argv = (*argv) + 1;
 		test_arg(argv);
 
@@ -251,8 +214,7 @@ int key_from_string(char *argv)
 }
 
 struct_adress
-    ** get_server_address(char *address_string,
-			  struct_adress ** addr_ptr)
+    ** get_server_address(char *address_string, struct_adress ** addr_ptr)
 {
 	uint16_t u16_sub_addr;
 	char *domain, *req;
@@ -260,21 +222,15 @@ struct_adress
 	if (DEBUG)
 		printf("\n\nArg 1: %s\n", address_string);
 
-	u16_sub_addr =
-	    strcspn(address_string, START_SUBADDR);
+	u16_sub_addr = strcspn(address_string, START_SUBADDR);
 	if (DEBUG)
-		printf("\n\nStarttag at %d\n",
-		       u16_sub_addr);
+		printf("\n\nStarttag at %d\n", u16_sub_addr);
 
-	if ((domain =
-	     strtok(address_string,
-		    START_SUBADDR)) != NULL) {
+	if ((domain = strtok(address_string, START_SUBADDR)) != NULL) {
 
 		if ((req = strtok(NULL, " ")) != NULL) {
 
-			set_server_adress_struct(domain,
-						 req,
-						 *addr_ptr);
+			set_server_adress_struct(domain, req, *addr_ptr);
 
 		} else {
 			return NULL;
@@ -292,8 +248,7 @@ struct_adress
 
 void
 set_server_adress_struct(const char *domain,
-			 const char *request,
-			 struct_adress * s_addr)
+			 const char *request, struct_adress * s_addr)
 {
 
 	s_addr->s_domain = strdup(domain);

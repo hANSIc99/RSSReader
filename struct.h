@@ -29,6 +29,7 @@
 
 #define MAX_DOMAIN_LENGHT 200
 #define MAX_REQUEST_LENGHT 500
+#define MAX_SEARCHKEYWORDS 10
 
 #define true 1
 #define false 0
@@ -71,7 +72,7 @@ typedef struct s_adress {
 	bool b_http;
 	bool b_json;
 
-	char *search_keyword;
+	char *search_keyword[MAX_SEARCHKEYWORDS];
 	uint16_t u16_update_interval_seconds;
 
 } struct_adress;

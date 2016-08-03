@@ -60,20 +60,19 @@ int main(int argc, char **argv)
 {
 	struct_adress *rss_addres_options = NULL;
 
-	uint8_t update_flag = 1;
+	uint8_t u8_update_flag = 1;
+	uint8_t u8_keyword_count;
 	struct_news_list *List1, *List2;
 
 	List1 = NULL;
 	List2 = NULL;
 
 	rss_addres_options = malloc(sizeof(struct_adress));
-	memset(rss_addres_options, 0,
-	       sizeof(struct_adress));
+	memset(rss_addres_options, 0, sizeof(struct_adress));
 
 	set_default_options(&rss_addres_options);
 
-	LIBXML_TEST_VERSION handle_options(argv, &argc,
-					   &rss_addres_options);
+	LIBXML_TEST_VERSION handle_options(argv, &argc, &rss_addres_options);
 
 	if (rss_addres_options->b_print == true) {
 		printf("%s", start_licence);
@@ -104,19 +103,17 @@ int main(int argc, char **argv)
 
 	while (rss_addres_options->b_update) {
 
-		if (update_flag != 0) {
+		if (u8_update_flag != 0) {
 
-			update_flag = 0;
+			u8_update_flag = 0;
 
 			if (DEBUG) {
 				printf("\nFirst Test");
 			}
 			req_server(rss_addres_options);
-			List2 =
-			    load_data(rss_addres_options);
+			List2 = load_data(rss_addres_options);
 
-			check_for_updates(List2, List1,
-					  &rss_addres_options);
+			check_for_updates(List2, List1, &rss_addres_options);
 
 			free_list(List1);
 
@@ -126,13 +123,11 @@ int main(int argc, char **argv)
 			if (DEBUG) {
 				printf("\nSeconds Test");
 			}
-			update_flag = 1;
+			u8_update_flag = 1;
 			req_server(rss_addres_options);
-			List1 =
-			    load_data(rss_addres_options);
+			List1 = load_data(rss_addres_options);
 
-			check_for_updates(List1, List2,
-					  &rss_addres_options);
+			check_for_updates(List1, List2, &rss_addres_options);
 			free_list(List2);
 
 		}
@@ -142,8 +137,13 @@ int main(int argc, char **argv)
 
 	free(rss_addres_options->s_domain);
 	free(rss_addres_options->s_request);
-	free(rss_addres_options->search_keyword);
 	free(rss_addres_options->s_raw_string);
+	while ((rss_addres_options->search_keyword[u8_keyword_count]) != NULL) {
+
+		free(rss_addres_options->search_keyword[u8_keyword_count]);
+		++u8_keyword_count;
+
+	}
 	free(rss_addres_options);
 	free_list(List1);
 
