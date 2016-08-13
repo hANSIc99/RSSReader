@@ -34,8 +34,8 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 
 	uint16_t u16_match_counter[MAX_SEARCHKEYWORDS];
 	uint8_t u8_keyword_counter = 0;
-	json_t *root, *js_keyword, *js_src_domain,
-	    *js_pub_date, *js_data, *js_sys_time, *js_matches, *js_kwrd_array;
+	json_t *root, *js_keyword, *js_tmp,
+	     *js_data, *js_sys_time, *js_kwrd_array;
 	char *keyword_ptr;
 	time_t sys_time;
 	struct_news *temp_pointer;
@@ -56,13 +56,17 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 	time(&sys_time);
 	js_sys_time = json_integer(sys_time);
 
-	if ((*address_options)->s_domain != NULL) {
-		js_src_domain = json_string((*address_options)->s_domain);
-		json_object_set(js_data, "source", js_src_domain);
+	if ((*address_options)->s_domain) {
+		js_tmp = json_string((*address_options)->s_domain);
+		json_object_set(js_data, "source", js_tmp);
 	}
-	if ((*List)->start->pub_date != NULL) {
-		js_pub_date = json_string((*List)->start->pub_date);
-		json_object_set(js_data, "pub_date", js_pub_date);
+	if ((*List)->start->pub_date) {
+		js_tmp = json_string((*List)->start->pub_date);
+		json_object_set(js_data, "pub_date", js_tmp);
+	}
+	if((*address_options)->s_customer){
+	js_tmp = json_string((*address_options)->s_customer);
+	json_object_set(js_data, "customer", js_tmp);	
 	}
 
 	json_object_set(js_data, "sys_time", js_sys_time);
@@ -76,11 +80,11 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 			printf("\nTitle No.: %d : %s\n",
 			       temp_pointer->position, temp_pointer->title);
 		}
-		if ((keyword_ptr = temp_pointer->description) != NULL) {
+		if ((keyword_ptr = temp_pointer->description)) {
 
 			for (u8_keyword_counter = 0;
 			     ((*address_options)->search_keyword
-			      [u8_keyword_counter]) != NULL;
+			      [u8_keyword_counter] != NULL);
 			     ++u8_keyword_counter) {
 
 				u16_match_counter[u8_keyword_counter] +=
@@ -103,10 +107,10 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 				json_string((*address_options)->search_keyword
 					    [u8_keyword_counter]));
 
-		js_matches = json_integer((json_int_t)
+		js_tmp = json_integer((json_int_t)
 					  u16_match_counter
 					  [u8_keyword_counter]);
-		json_object_set(js_keyword, "u16_result", js_matches);
+		json_object_set(js_keyword, "u16_result", js_tmp);
 
 		json_array_append(js_kwrd_array, js_keyword);
 
@@ -125,11 +129,12 @@ uint16_t u16_keywrd_counter(char *source, char *keyword)
 	char pre_src;
 	char post_src;
 
-	while ((source = strcasestr(source, keyword)) != NULL) {
+	while ((source = strcasestr(source, keyword))) {
+		/* if the substring is found */
 		pre_src = *(source - 1);
 		post_src = *(source + strlen(keyword));
 
-		if ((pre_src == ' ') && (post_src == ' ')) {
+		if ((pre_src == ' ') && ((post_src == ' ') || (post_src == ',') || (post_src == '.') || (post_src == 's') )) {
 			u16_match_counter++;
 		}
 		source = source + strlen(keyword) + 1;

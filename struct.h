@@ -64,6 +64,7 @@ typedef struct s_adress {
 	char *s_domain;
 	char *s_request;
 	char *s_raw_string;
+	char *s_customer;
 
 	bool b_print;
 	bool b_dom_parser;

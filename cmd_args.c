@@ -36,6 +36,7 @@ static type_struct lookuptable[] = {
 	{"PRINT", PRINT},
 	{"UPDATE", UPDATE},
 	{"KEYWORD", KEYWORD},
+	{"CUSTOMER", CUSTOMER},
 	{"JSON", JSON}
 };
 
@@ -47,15 +48,15 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 	char **test_val;
 	argv++;
 
-	if (*argv != NULL) {
+	if (*argv) {
 		/* option counter nicht global machen */
 		test_arg(argv);
 
-		if (u8_option_counter != 0) {
+		if (u8_option_counter) {
 
 			switch (key_from_string(*argv)) {
 			case DOM:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption DOM = true");
 				}
 				(*addr_pointer)->b_dom_parser = true;
@@ -63,7 +64,7 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case DOM_LONG:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption DOM_LONG = true");
 				}
 				(*addr_pointer)->b_dom_parser = true;
@@ -71,14 +72,14 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case XML:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption XML = true\n");
 				}
 				u8_option_counter = 0;
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case HTTP:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption HTTP = true\n");
 				}
 				u8_option_counter = 0;
@@ -91,13 +92,13 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case UPDATE:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption UPDATE = true\n");
 				}
 				test_val = argv;
 				test_val++;
 				(*addr_pointer)->b_update = true;
-				if ((*test_val) != NULL) {
+				if ((*test_val)) {
 					(*addr_pointer)->u16_update_interval_seconds = strtol((*test_val), NULL, 10);
 				}
 				if ((*addr_pointer)->u16_update_interval_seconds
@@ -116,18 +117,18 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case KEYWORD:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption KEYWORD = true\n");
 				}
 				test_val = argv;
 				test_val++;
-				if (((*test_val) != NULL)
+				if ((*test_val)
 				    && (((*test_val)[0]) != '-')) {
 					(*addr_pointer)->search_keyword
 					    [u8_keyword_counter] =
 					    strdup(*test_val);
 					argv++;
-					if ((*addr_pointer)->b_print == true) {
+					if ((*addr_pointer)->b_print) {
 						printf
 						    ("\nKeyword found: %s\n",
 						     (*addr_pointer)->
@@ -143,14 +144,37 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case JSON:
-				if ((*addr_pointer)->b_print == true) {
+				if ((*addr_pointer)->b_print) {
 					printf("\noption JSON = true\n");
 				}
 				(*addr_pointer)->b_json = true;
 				u8_option_counter = 0;
 				handle_options(argv, argc, addr_pointer);
 				break;
-
+			case CUSTOMER:
+				if ((*addr_pointer)->b_print) {
+					printf("\noption CUSTOMER = true\n");
+				}
+				test_val = argv;
+				test_val++;
+				if ((*test_val)
+				    && (((*test_val)[0]) != '-')) {
+					(*addr_pointer)->s_customer =
+					    strdup(*test_val);
+					argv++;
+					if ((*addr_pointer)->b_print) {
+						printf
+						    ("\nCustomer found: %s\n",
+						     (*addr_pointer)->s_customer);
+					}
+				} else {
+					printf
+					    ("\nError, no keyword found.\n"
+					     "The command is executed by -keyword WORDXY");
+				}
+				u8_option_counter = 0;	
+				handle_options(argv, argc, addr_pointer);
+				break;
 			case BADARG:
 				printf
 				    ("Command \"%s\" not found.\nRSSReader -help list available commands and a short manual\n",
@@ -226,7 +250,7 @@ struct_adress
 	if (DEBUG)
 		printf("\n\nStarttag at %d\n", u16_sub_addr);
 
-	if ((domain = strtok(address_string, START_SUBADDR)) != NULL) {
+	if ((domain = strtok(address_string, START_SUBADDR))) {
 
 		if ((req = strtok(NULL, " ")) != NULL) {
 
@@ -259,7 +283,12 @@ set_server_adress_struct(const char *domain,
 void set_default_options(struct_adress ** str_addr)
 {
 
-	(*str_addr)->b_update = false;
+	(*str_addr)->b_print = false;
 	(*str_addr)->b_dom_parser = true;
+	(*str_addr)->b_update = false;
+	(*str_addr)->b_xml = false;
+	(*str_addr)->b_http = false;
+	(*str_addr)->b_json = false;
+	
 
 }

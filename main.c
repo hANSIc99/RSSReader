@@ -72,13 +72,17 @@ int main(int argc, char **argv)
 
 	set_default_options(&rss_addres_options);
 
-	LIBXML_TEST_VERSION handle_options(argv, &argc, &rss_addres_options);
+	LIBXML_TEST_VERSION 
 
-	if (rss_addres_options->b_print == true) {
+	/* read command line options */
+
+	handle_options(argv, &argc, &rss_addres_options);
+
+	if (rss_addres_options->b_print) {
 		printf("%s", start_licence);
 	}
 
-	if (rss_addres_options != NULL) {
+	if (rss_addres_options) {
 		/* req_svr_ptr holds the raw data from the server */
 		if (DEBUG) {
 			printf("\nData loaded!\n");
@@ -91,7 +95,7 @@ int main(int argc, char **argv)
 	}
 
 	/* First time reading; news at last */
-	if (List1 != NULL) {
+	if (List1) {
 
 		initial_update(&List1, &rss_addres_options);
 
@@ -138,7 +142,8 @@ int main(int argc, char **argv)
 	free(rss_addres_options->s_domain);
 	free(rss_addres_options->s_request);
 	free(rss_addres_options->s_raw_string);
-	while ((rss_addres_options->search_keyword[u8_keyword_count]) != NULL) {
+	free(rss_addres_options->s_customer);
+	while (rss_addres_options->search_keyword[u8_keyword_count]) {
 
 		free(rss_addres_options->search_keyword[u8_keyword_count]);
 		++u8_keyword_count;

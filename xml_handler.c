@@ -99,12 +99,12 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 		if (cur_node->type == XML_ELEMENT_NODE) {
 
 			/* search for publish date */
-			if (strncmp
+			if (!strncmp
 			    ((char *)cur_node->name,
-			     pub_date, date_size) == 0) {
+			     pub_date, date_size)) {
 
 				/* test if there is an cripple tag */
-				if ((char *)cur_node->children->content != NULL) {
+				if ((char *)cur_node->children->content) {
 					tmp_pub_date = strdup((char *)
 							      cur_node->children->content);
 				} else {
@@ -114,20 +114,20 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 
 			/* Wenn der Name ,,title" entspricht */
 
-			if (strncmp
+			if (!strncmp
 			    ((char *)cur_node->name,
-			     title_name, title_size) == 0) {
+			     title_name, title_size)) {
 
 				/* Wenn Parent = ,,item" entspricht */
 
-				if (strncmp
+				if (!strncmp
 				    ((char *)cur_node->parent->name,
-				     item_name, item_size) == 0) {
+				     item_name, item_size)) {
 
 					element_counter++;
 
 					/* test if there is an cripple array */
-					if (cur_node->children != NULL) {
+					if (cur_node->children) {
 						if (READ)
 							printf
 							    ("Title [%d]: %s\n\n",
@@ -152,18 +152,18 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 			}
 
 			/* Wenn der Name ,,link" entspricht */
-			if (strncmp
+			if (!strncmp
 			    ((char *)cur_node->name,
-			     link_name, link_size) == 0) {
+			     link_name, link_size)) {
 
 				/* Wenn Parent = ,,item" entspricht */
 
-				if (strncmp
+				if (!strncmp
 				    ((char *)cur_node->parent->name,
-				     item_name, item_size) == 0) {
+				     item_name, item_size)) {
 
 					/* test if there is a cripple xml tag */
-					if (cur_node->children != NULL) {
+					if (cur_node->children) {
 
 						if (READ)
 							printf
@@ -187,22 +187,22 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 			}
 
 			/* Wenn der Name ,,description" entspricht */
-			if (strncmp
+			if (!strncmp
 			    ((char *)cur_node->name,
-			     description_name, description_size) == 0) {
+			     description_name, description_size)) {
 
 				/* Wenn Parent = ,,item" entspricht */
 
-				if (strncmp
+				if (!strncmp
 				    ((char *)cur_node->parent->name,
-				     item_name, item_size) == 0) {
+				     item_name, item_size)) {
 					char *clean_string, *markup_start;
 					int startzeichen, string_lenght;
 					startzeichen = 0;
 					markup_start = MARKUP_START;
 
 					/* test if there is a cripple xml tag */
-					if (cur_node->children != NULL) {
+					if (cur_node->children) {
 
 						/* test if it is markup in the string */
 
@@ -386,7 +386,7 @@ struct_news_list *load_data(struct_adress * meta_info)
 		       rss_string[(strlen(rss_string) - 1)]);
 	}
 #endif
-	if (meta_info->b_dom_parser == true) {
+	if (meta_info->b_dom_parser) {
 		if ((dom_parser(rss_string, (strlen(rss_string)), lists)) == 0) {
 
 			free(rss_string);
