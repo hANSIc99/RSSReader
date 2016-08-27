@@ -66,9 +66,10 @@ void req_server(struct_adress * rss_server)
 {
 
 	struct addrinfo hints, *res, *p;
-	int addr_status, sock_status, connect_status, numbytes, send_status;
+	int addr_status, sock_status, connect_status, numbytes, send_status, opt_status;
 	char ipstr[INET6_ADDRSTRLEN];
 	struct sockaddr_in *port;
+	struct timeval tv;
 	char *req;
 	char *req1 = REQ1;
 	char *req2 = REQ2;
@@ -78,6 +79,10 @@ void req_server(struct_adress * rss_server)
 		printf("\nError: Could not find an address.");
 		exit(1);
 	}
+
+
+	tv.tv_sec = SEC_TIMEOUT;
+	tv.tv_usec = 0;
 
 	/* Ther terminating  \0 character must be added to the size in [byte] */
 	u16_str_lenght =
@@ -246,6 +251,15 @@ void req_server(struct_adress * rss_server)
 		 * 
 		 * addrlen = Länge der Adresse in Bytes
 		 */
+
+
+
+		if((opt_status = setsockopt(sock_status, SOL_SOCKET, SO_RCVTIMEO,&tv, sizeof(struct timeval)))){
+		
+		fprintf(stderr, "\nERROR: setsockopt() : %s\n", strerror(errno));
+		syslog(LOG_USER, "\nERROR: setsockopt() : %s\n", strerror(errno));
+
+		}
 
 		port = (struct sockaddr_in *)p->ai_addr;
 		if (DEBUG) {

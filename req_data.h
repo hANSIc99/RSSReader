@@ -31,9 +31,12 @@
 #include <netinet/in.h>
 #include "struct.h"
 #include <unistd.h>
+#include <errno.h>
+#include <syslog.h>
 
 #define PORT "80"
 #define MAXDATASIZE 100000	/* maximale nummer an Bytes die empfangen werden kann */
+#define SEC_TIMEOUT 5
 
 #ifndef _REQ_DATA
 #define _REQ_DATA
