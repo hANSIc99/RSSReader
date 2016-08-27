@@ -31,6 +31,7 @@
 #include <netinet/in.h>
 #include "struct.h"
 #include <unistd.h>
+#include <fcntl.h>
 
 #define PORT "80"
 #define MAXDATASIZE 100000	/* maximale nummer an Bytes die empfangen werden kann */
