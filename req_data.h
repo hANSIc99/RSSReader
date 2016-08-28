@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <syslog.h>
+#include <log4c.h>
 
 #define PORT "80"
 #define MAXDATASIZE 100000	/* maximale nummer an Bytes die empfangen werden kann */

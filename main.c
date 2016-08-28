@@ -29,10 +29,10 @@
  */
 
 /*! \fn int key_from_string(char *argv)
-    \brief Compares the arguments.
-    \param *argv The name of the descriptor.
+  \brief Compares the arguments.
+  \param *argv The name of the descriptor.
 
-*/
+ */
 
 #define POSIX_C_SOURCE 200809L
 
@@ -45,6 +45,7 @@
 #include <time.h>
 #include "text.h"
 #include "cmd_args.h"
+#include <log4c.h>
 #define DEBUG 0
 #define PRINT_OUT 1
 #define DELAY_SEC 10
@@ -69,14 +70,18 @@ int main(int argc, char **argv)
 
 	rss_addres_options = malloc(sizeof(struct_adress));
 	memset(rss_addres_options, 0, sizeof(struct_adress));
+	
+log4c_init();
+
+
 
 	set_default_options(&rss_addres_options);
 
 	LIBXML_TEST_VERSION 
 
-	/* read command line options */
+		/* read command line options */
 
-	handle_options(argv, &argc, &rss_addres_options);
+		handle_options(argv, &argc, &rss_addres_options);
 
 	if (rss_addres_options->b_print) {
 		printf("%s", start_licence);
