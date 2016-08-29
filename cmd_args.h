@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "struct.h"
+#include <log4c.h>
 
 #define START_SUBADDR "/"
 

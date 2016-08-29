@@ -60,18 +60,22 @@ int delay_seconds = DELAY_SEC;
 int main(int argc, char **argv)
 {
 	struct_adress *rss_addres_options = NULL;
-
+	const char *prgrm_name = *argv;
 	uint8_t u8_update_flag = 1;
 	uint8_t u8_keyword_count;
 	struct_news_list *List1, *List2;
-
+  	log4c_category_t* log_tracer = NULL;
+	log4c_category_t* log_debug = NULL;
 	List1 = NULL;
 	List2 = NULL;
 
 	rss_addres_options = malloc(sizeof(struct_adress));
 	memset(rss_addres_options, 0, sizeof(struct_adress));
 	
-log4c_init();
+
+
+
+
 
 
 
@@ -82,16 +86,24 @@ log4c_init();
 		/* read command line options */
 
 		handle_options(argv, &argc, &rss_addres_options);
+if(log4c_init()){
+printf("\nlog4c_init() failed\n");
+exit(1);
+}else{
+      log_tracer = log4c_category_get("tracer");
+      log_tracer = log4c_category_get("debug");
 
+      log4c_category_log(log_tracer, LOG4C_PRIORITY_WARN, "%s: log4c initialized", prgrm_name);
+
+
+}
 	if (rss_addres_options->b_print) {
 		printf("%s", start_licence);
 	}
 
 	if (rss_addres_options) {
 		/* req_svr_ptr holds the raw data from the server */
-		if (DEBUG) {
-			printf("\nData loaded!\n");
-		}
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_DEBUG, "%s: %s() -> arguments processed", prgrm_name, __func__);
 		req_server(rss_addres_options);
 		List1 = load_data(rss_addres_options);
 	} else {
@@ -143,6 +155,9 @@ log4c_init();
 
 	}
 #endif
+    if ( log4c_fini()){
+      printf("log4c_fini() failed");
+    }
 
 	free(rss_addres_options->s_domain);
 	free(rss_addres_options->s_request);

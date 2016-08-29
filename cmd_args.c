@@ -25,8 +25,8 @@
 
 #define DEBUG 0
 
-uint8_t u8_option_counter = false;
-uint8_t u8_keyword_counter;
+static uint8_t u8_option_counter = false;
+static uint8_t u8_keyword_counter;
 
 static type_struct lookuptable[] = {
 	{"DOM", DOM},
@@ -47,7 +47,6 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 
 	char **test_val;
 	argv++;
-
 	if (*argv) {
 		/* option counter nicht global machen */
 		test_arg(argv);
@@ -218,6 +217,11 @@ int key_from_string(char *argv)
 	char *str;
 	str = malloc(strlen(argv) * sizeof(char));
 	memset(str, 0, (strlen(argv) * sizeof(char)));
+
+
+#if  0     /* ----- #if 0 : If0Label_1 ----- */
+	printf("\nHALLO : %s COUNTER: %d\n", (argv), u8_option_counter);
+#endif     /* ----- #if 0 : If0Label_1 ----- */
 
 	/* convert args to upper chars */
 
