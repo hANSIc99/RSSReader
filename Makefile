@@ -7,7 +7,7 @@ CFLAGS= -c -Wall -std=c11 -Wextra -pedantic -Woverlength-strings -g -O0 -I /usr/
 # LIBS muss im lezten Schritt angehängt werden
 LIBS = -L/usr/local/lib -lm -ljansson -lxml2 -llog4c
 
-DEPS = req_data.h xml_handler.h struct.h update_service.h text.h cmd_args.h json_machine.h
+DEPS = req_data.h xml_handler.h struct.h update_service.h text.h cmd_args.h json_machine.h log_var.h
 OBJ = main.o req_data.o xml_handler.o update_service.o cmd_args.o json_machine.o
 
 

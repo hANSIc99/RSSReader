@@ -39,6 +39,7 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 	char *keyword_ptr;
 	time_t sys_time;
 	struct_news *temp_pointer;
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> function entered, set keyword matchcounter-array to zero", (*address_options)->s_program_name, __func__);
 
 	for (u8_keyword_counter = 0; u8_keyword_counter < MAX_SEARCHKEYWORDS;
 	     ++u8_keyword_counter) {
@@ -49,7 +50,9 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 	root = json_object();
 	js_kwrd_array = json_array();
 
-	json_object_set(root, "PRGRM", json_string("RSSReader"));
+	json_object_set(root, "PRGRM", json_string((*address_options)->s_program_name));
+	
+	/* 	BAUSTELLE */
 
 	json_object_set(root, "data", js_data);
 

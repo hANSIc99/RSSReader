@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "json_machine.h"
+#include <log4c.h>
 void update_assistant(const uint16_t * milliseconds, const uint16_t * seconds);
 void initial_update(struct_news_list ** List, struct_adress ** address_options);
 uint8_t
@@ -37,5 +38,7 @@ check_for_updates(const struct_news_list * new_list,
 		  const struct_news_list * old_list,
 		  struct_adress ** address_options);
 void free_list(struct_news_list * list);
-
+extern log4c_category_t* log_tracer;
+extern log4c_category_t* log_debug;
+extern log4c_category_t* log_raw;
 #endif

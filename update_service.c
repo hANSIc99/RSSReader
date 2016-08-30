@@ -52,6 +52,8 @@ void initial_update(struct_news_list ** List, struct_adress ** address_options)
 	}
 	if ((*address_options)->b_json == true) {
 		/* here the JSON-Object is build */
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> call json-building function", (*address_options)->s_program_name, __func__);
+
 		process_json(List, address_options);
 	}
 

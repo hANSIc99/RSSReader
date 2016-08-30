@@ -34,6 +34,8 @@
 #include <errno.h>
 #include <syslog.h>
 #include <log4c.h>
+#include "log_var.h"
+#include <errno.h>
 
 #define PORT "80"
 #define MAXDATASIZE 100000	/* maximale nummer an Bytes die empfangen werden kann */
@@ -55,6 +57,11 @@ struct addrinfo {
 	struct addrinfo *ai_next;
 };
 #endif
+
+extern log4c_category_t* log_tracer;
+extern log4c_category_t* log_debug;
+extern log4c_category_t* log_raw;
+
 void *get_in_addr(struct sockaddr *sa);
 void req_server(struct_adress * rss_server);
 #endif
