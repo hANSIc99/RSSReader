@@ -24,7 +24,6 @@
 #include "update_service.h"
 #define DELAY_MILLI 500;
 #define DELAY_CON_LOST 10;
-#define DEBUG 0
 
 void initial_update(struct_news_list ** List, struct_adress ** address_options)
 {
@@ -52,7 +51,10 @@ void initial_update(struct_news_list ** List, struct_adress ** address_options)
 	}
 	if ((*address_options)->b_json == true) {
 		/* here the JSON-Object is build */
-	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> call json-building function", (*address_options)->s_program_name, __func__);
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+				   "%s: %s() -> call json-building function",
+				   (*address_options)->s_program_name,
+				   __func__);
 
 		process_json(List, address_options);
 	}
@@ -74,13 +76,13 @@ check_for_updates(const struct_news_list * new_list,
 		for (str_ptr = new_list->start;
 		     str_ptr != NULL; str_ptr = str_ptr->next) {
 
-			if (DEBUG) {
-				printf
-				    ("\nresult of strcmp = %d\n",
-				     strncmp((str_ptr->title),
+
+log4c_category_log(log_tracer, LOG4C_PRIORITY_DEBUG, "%s: %s() -> result of strcmp: %d",
+				   (*address_options)->s_program_name,
+				   __func__, strncmp((str_ptr->title),
 					     (old_list->start->title),
 					     (strlen(new_list->start->title))));
-			}
+
 			if (strcmp(str_ptr->title, old_list->start->title) != 0) {
 
 				if ((*address_options)->b_print != 0) {
@@ -117,7 +119,8 @@ check_for_updates(const struct_news_list * new_list,
 
 		update_assistant(&delay_milliseconds,
 				 &
-				 (*address_options)->u16_update_interval_seconds);
+				 (*address_options)->
+				 u16_update_interval_seconds);
 		/* If old_list was not NULL */
 		return 1;
 	} else {

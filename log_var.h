@@ -3,9 +3,8 @@
 
 #include <log4c.h>
 
-log4c_category_t* log_tracer;
-log4c_category_t* log_debug;
-log4c_category_t* log_raw;
-
+log4c_category_t *log_tracer;
+log4c_category_t *log_debug;
+log4c_category_t *log_raw;
 
 #endif

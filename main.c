@@ -48,7 +48,6 @@
 #include <log4c.h>
 #include "log_var.h"
 
-#define DEBUG 0
 #define PRINT_OUT 1
 #define DELAY_SEC 10
 
@@ -58,10 +57,9 @@ int delay_seconds = DELAY_SEC;
  * 
  *implement the json output   
  */
-extern log4c_category_t* log_tracer;
-extern log4c_category_t* log_debug;
-extern log4c_category_t* log_raw;
-
+extern log4c_category_t *log_tracer;
+extern log4c_category_t *log_debug;
+extern log4c_category_t *log_raw;
 
 int main(int argc, char **argv)
 {
@@ -78,27 +76,25 @@ int main(int argc, char **argv)
 
 	rss_addres_options->s_program_name = strdup(*argv);
 
-
 	set_default_options(&rss_addres_options);
 
-	LIBXML_TEST_VERSION 
-
-		/* read command line options */
-
-		handle_options(argv, &argc, &rss_addres_options);
+	LIBXML_TEST_VERSION
+	    /* read command line options */
+	    handle_options(argv, &argc, &rss_addres_options);
 
 	/* log4c initialisation can only take place after the program arguments are processed */
 
-	if(log4c_init()){
+	if (log4c_init()) {
 		printf("\nlog4c_init() failed\n");
 		exit(1);
-	}else{
-	log_tracer = log4c_category_get("tracer");
-	log_debug = log4c_category_get("debug");
-	log_raw = log4c_category_get("raw_data");
+	} else {
+		log_tracer = log4c_category_get("tracer");
+		log_debug = log4c_category_get("debug");
+		log_raw = log4c_category_get("raw_data");
 
-	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: log4c initialized", rss_addres_options->s_program_name);
-
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+				   "%s: log4c initialized",
+				   rss_addres_options->s_program_name);
 
 	}
 	if (rss_addres_options->b_print) {
@@ -107,27 +103,38 @@ int main(int argc, char **argv)
 
 	if (rss_addres_options) {
 		/* req_svr_ptr holds the raw data from the server */
-		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> arguments processed", rss_addres_options->s_program_name, __func__);
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+				   "%s: %s() -> arguments processed",
+				   rss_addres_options->s_program_name,
+				   __func__);
 		req_server(rss_addres_options);
 		List1 = load_data(rss_addres_options);
 	} else {
-		log4c_category_log(log_debug, LOG4C_PRIORITY_ERROR,"%s: %s() -> adress struct empty", rss_addres_options->s_program_name, __func__);	
+		log4c_category_log(log_debug, LOG4C_PRIORITY_ERROR,
+				   "%s: %s() -> adress struct empty",
+				   rss_addres_options->s_program_name,
+				   __func__);
 	}
 
 	/* First time reading; news at last */
 	if (List1) {
 
-		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> prints the content or the json on stdout", rss_addres_options->s_program_name, __func__);
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+				   "%s: %s() -> prints the content or the json on stdout",
+				   rss_addres_options->s_program_name,
+				   __func__);
 		initial_update(&List1, &rss_addres_options);
 
 	} else {
-		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,"%s: %s() -> no content available, recalling the server", rss_addres_options->s_program_name, __func__);
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+				   "%s: %s() -> no content available, recalling the server",
+				   rss_addres_options->s_program_name,
+				   __func__);
 
-		if(rss_addres_options->b_print){
+		if (rss_addres_options->b_print) {
 			printf("\nRecall server.....\n");
 		}
 	}
-
 
 	while (rss_addres_options->b_update) {
 
@@ -135,7 +142,10 @@ int main(int argc, char **argv)
 
 			u8_update_flag = 0;
 
-			log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> first update request", rss_addres_options->s_program_name, __func__);
+			log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+					   "%s: %s() -> first update request",
+					   rss_addres_options->s_program_name,
+					   __func__);
 
 			req_server(rss_addres_options);
 			List2 = load_data(rss_addres_options);
@@ -148,7 +158,10 @@ int main(int argc, char **argv)
 
 		else {
 
-			log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> second update request", rss_addres_options->s_program_name, __func__);
+			log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+					   "%s: %s() -> second update request",
+					   rss_addres_options->s_program_name,
+					   __func__);
 
 			u8_update_flag = 1;
 			req_server(rss_addres_options);
@@ -161,13 +174,14 @@ int main(int argc, char **argv)
 
 	}
 
-	if ( log4c_fini()){
+	if (log4c_fini()) {
 		printf("log4c_fini() failed");
 	}
 
 /* free allocated memory */
-log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> free allocated memory", rss_addres_options->s_program_name, __func__);
-
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+			   "%s: %s() -> free allocated memory",
+			   rss_addres_options->s_program_name, __func__);
 
 	free(rss_addres_options->s_domain);
 	free(rss_addres_options->s_request);

@@ -38,7 +38,7 @@ check_for_updates(const struct_news_list * new_list,
 		  const struct_news_list * old_list,
 		  struct_adress ** address_options);
 void free_list(struct_news_list * list);
-extern log4c_category_t* log_tracer;
-extern log4c_category_t* log_debug;
-extern log4c_category_t* log_raw;
+extern log4c_category_t *log_tracer;
+extern log4c_category_t *log_debug;
+extern log4c_category_t *log_raw;
 #endif

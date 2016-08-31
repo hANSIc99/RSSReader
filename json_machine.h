@@ -37,7 +37,7 @@
 void process_json(struct_news_list ** List, struct_adress ** address_options);
 uint16_t u16_keywrd_counter(char *, char *);
 
-extern log4c_category_t* log_tracer;
-extern log4c_category_t* log_debug;
-extern log4c_category_t* log_raw;
+extern log4c_category_t *log_tracer;
+extern log4c_category_t *log_debug;
+extern log4c_category_t *log_raw;
 #endif

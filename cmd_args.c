@@ -98,18 +98,20 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 				test_val++;
 				(*addr_pointer)->b_update = true;
 				if ((*test_val)) {
-					(*addr_pointer)->u16_update_interval_seconds = strtol((*test_val), NULL, 10);
+					(*addr_pointer)->
+					    u16_update_interval_seconds =
+					    strtol((*test_val), NULL, 10);
 				}
 				if ((*addr_pointer)->u16_update_interval_seconds
 				    == 0) {
 					printf
 					    ("\nNo correct interval found, default will be 60 seconds.\n");
-					(*addr_pointer)->u16_update_interval_seconds = 60;
+					(*addr_pointer)->
+					    u16_update_interval_seconds = 60;
 				} else {
 					printf
 					    ("\nUpdate interval: %d seconds\n",
-					     ((*addr_pointer)->
-					      u16_update_interval_seconds));
+					     ((*addr_pointer)->u16_update_interval_seconds));
 					argv++;
 				}
 				u8_option_counter = 0;
@@ -130,8 +132,8 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					if ((*addr_pointer)->b_print) {
 						printf
 						    ("\nKeyword found: %s\n",
-						     (*addr_pointer)->
-						     search_keyword[u8_keyword_counter]);
+						     (*addr_pointer)->search_keyword
+						     [u8_keyword_counter]);
 					}
 					++u8_keyword_counter;
 				} else {
@@ -164,14 +166,15 @@ void handle_options(char **argv, int *argc, struct_adress ** addr_pointer)
 					if ((*addr_pointer)->b_print) {
 						printf
 						    ("\nCustomer found: %s\n",
-						     (*addr_pointer)->s_customer);
+						     (*addr_pointer)->
+						     s_customer);
 					}
 				} else {
 					printf
 					    ("\nError, no keyword found.\n"
 					     "The command is executed by -keyword WORDXY");
 				}
-				u8_option_counter = 0;	
+				u8_option_counter = 0;
 				handle_options(argv, argc, addr_pointer);
 				break;
 			case BADARG:
@@ -218,10 +221,9 @@ int key_from_string(char *argv)
 	str = malloc(strlen(argv) * sizeof(char));
 	memset(str, 0, (strlen(argv) * sizeof(char)));
 
-
-#if  0     /* ----- #if 0 : If0Label_1 ----- */
+#if  0				/* ----- #if 0 : If0Label_1 ----- */
 	printf("\nHALLO : %s COUNTER: %d\n", (argv), u8_option_counter);
-#endif     /* ----- #if 0 : If0Label_1 ----- */
+#endif				/* ----- #if 0 : If0Label_1 ----- */
 
 	/* convert args to upper chars */
 
@@ -293,6 +295,5 @@ void set_default_options(struct_adress ** str_addr)
 	(*str_addr)->b_xml = false;
 	(*str_addr)->b_http = false;
 	(*str_addr)->b_json = false;
-	
 
 }

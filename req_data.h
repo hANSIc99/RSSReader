@@ -58,9 +58,9 @@ struct addrinfo {
 };
 #endif
 
-extern log4c_category_t* log_tracer;
-extern log4c_category_t* log_debug;
-extern log4c_category_t* log_raw;
+extern log4c_category_t *log_tracer;
+extern log4c_category_t *log_debug;
+extern log4c_category_t *log_raw;
 
 void *get_in_addr(struct sockaddr *sa);
 void req_server(struct_adress * rss_server);

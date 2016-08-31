@@ -23,7 +23,6 @@
 
 #include "json_machine.h"
 
-#define DEBUG 0
 /*
  * u16_match_counter = 0 -> discription available, no keyword found
  * u16_match_counter = 1 -> 1 (!) match found !
@@ -35,11 +34,13 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 	uint16_t u16_match_counter[MAX_SEARCHKEYWORDS];
 	uint8_t u8_keyword_counter = 0;
 	json_t *root, *js_keyword, *js_tmp,
-	     *js_data, *js_sys_time, *js_kwrd_array;
+	    *js_data, *js_sys_time, *js_kwrd_array;
 	char *keyword_ptr;
 	time_t sys_time;
 	struct_news *temp_pointer;
-	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> function entered, set keyword matchcounter-array to zero", (*address_options)->s_program_name, __func__);
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+			   "%s: %s() -> function entered, set keyword matchcounter-array to zero",
+			   (*address_options)->s_program_name, __func__);
 
 	for (u8_keyword_counter = 0; u8_keyword_counter < MAX_SEARCHKEYWORDS;
 	     ++u8_keyword_counter) {
@@ -50,9 +51,8 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 	root = json_object();
 	js_kwrd_array = json_array();
 
-	json_object_set(root, "PRGRM", json_string((*address_options)->s_program_name));
-	
-	/* 	BAUSTELLE */
+	json_object_set(root, "PRGRM",
+			json_string((*address_options)->s_program_name));
 
 	json_object_set(root, "data", js_data);
 
@@ -67,40 +67,59 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 		js_tmp = json_string((*List)->start->pub_date);
 		json_object_set(js_data, "pub_date", js_tmp);
 	}
-	if((*address_options)->s_customer){
-	js_tmp = json_string((*address_options)->s_customer);
-	json_object_set(js_data, "customer", js_tmp);	
+	if ((*address_options)->s_customer) {
+		js_tmp = json_string((*address_options)->s_customer);
+		json_object_set(js_data, "customer", js_tmp);
 	}
 
 	json_object_set(js_data, "sys_time", js_sys_time);
-
 
 	keyword_ptr = NULL;
 
 	for (temp_pointer = (*List)->end;
 	     temp_pointer != NULL; temp_pointer = temp_pointer->previous) {
-		if (DEBUG) {
-			printf("\nTitle No.: %d : %s\n",
-			       temp_pointer->position, temp_pointer->title);
-		}
-		if ((keyword_ptr = temp_pointer->description)) {
 
+		/* test if a describtion exists */
+
+		if ((keyword_ptr = temp_pointer->description)) {
+			/* check how many keywords are passed as arguments */
 			for (u8_keyword_counter = 0;
 			     ((*address_options)->search_keyword
 			      [u8_keyword_counter] != NULL);
 			     ++u8_keyword_counter) {
-
+				/* count the matches for the specific keywords */
 				u16_match_counter[u8_keyword_counter] +=
 				    u16_keywrd_counter(keyword_ptr,
-						       (*address_options)->search_keyword
+						       (*address_options)->
+						       search_keyword
 						       [u8_keyword_counter]);
 
+				log4c_category_log(log_raw,
+						   LOG4C_PRIORITY_TRACE,
+						   "%s: %s() -> find keywords in describtion of topic %d:\n%s",
+						   (*address_options)->
+						   s_program_name, __func__,
+						   temp_pointer->position,
+						   temp_pointer->title);
+				log4c_category_log(log_raw,
+						   LOG4C_PRIORITY_TRACE,
+						   "%s: %s() -> matches found %d",
+						   (*address_options)->
+						   s_program_name, __func__,
+						   u16_match_counter
+						   [u8_keyword_counter]);
 			}
 		}
+
 	}
 
 	/* Creating the JSON Array with the results of the search function 
 	 */
+
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+			   "%s: %s() -> creating JSON array with the results of the searching function",
+			   (*address_options)->s_program_name, __func__);
+
 	for (u8_keyword_counter = 0;
 	     ((*address_options)->search_keyword[u8_keyword_counter]) != NULL;
 	     ++u8_keyword_counter) {
@@ -111,8 +130,7 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 					    [u8_keyword_counter]));
 
 		js_tmp = json_integer((json_int_t)
-					  u16_match_counter
-					  [u8_keyword_counter]);
+				      u16_match_counter[u8_keyword_counter]);
 		json_object_set(js_keyword, "u16_result", js_tmp);
 
 		json_array_append(js_kwrd_array, js_keyword);
@@ -121,6 +139,9 @@ void process_json(struct_news_list ** List, struct_adress ** address_options)
 
 	json_object_set(js_data, "result", js_kwrd_array);
 
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,
+			   "%s: %s() -> print out the JSON-Object",
+			   (*address_options)->s_program_name, __func__);
 	printf("\n%s\n", json_dumps(root, JSON_INDENT(4)));
 
 }
@@ -137,7 +158,9 @@ uint16_t u16_keywrd_counter(char *source, char *keyword)
 		pre_src = *(source - 1);
 		post_src = *(source + strlen(keyword));
 
-		if ((pre_src == ' ') && ((post_src == ' ') || (post_src == ',') || (post_src == '.') || (post_src == 's') )) {
+		if ((pre_src == ' ')
+		    && ((post_src == ' ') || (post_src == ',')
+			|| (post_src == '.') || (post_src == 's'))) {
 			u16_match_counter++;
 		}
 		source = source + strlen(keyword) + 1;
