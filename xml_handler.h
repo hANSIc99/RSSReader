@@ -42,9 +42,15 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr);
 char *get_temp_string(char *xml_string, int startzeichen, int str_lenght);
 char *get_server_info(char *xml_string, int startzeichen);
 int get_starttag(const char *xml_string, const char *start_tag);
-char *get_rss_tag(char *temp_string, char *end_tag, const int *str_lenght);
+char *get_rss_tag(char *temp_string, char *end_tag, const uint32_t *str_lenght);
 void append(struct_news ** lst, uint16_t * position, char *title, char *link,
 	    char *description, char *tmp_pub_date, struct_news_list * list_ptr);
+
+void dom_pub_date(xmlNode *cur_node);
+void dom_title(xmlNode *cur_node);
+void dom_link(xmlNode *cur_node);
+uint8_t dom_description(xmlNode *cur_node);
+
 extern log4c_category_t *log_tracer;
 extern log4c_category_t *log_debug;
 extern log4c_category_t *log_raw;
