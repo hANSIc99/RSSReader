@@ -188,6 +188,7 @@ int main(int argc, char **argv)
 	free(rss_addres_options->s_raw_string);
 	free(rss_addres_options->s_customer);
 	free(rss_addres_options->s_program_name);
+	u8_keyword_count = 0;
 	while (rss_addres_options->search_keyword[u8_keyword_count]) {
 
 		free(rss_addres_options->search_keyword[u8_keyword_count]);

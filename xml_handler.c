@@ -92,21 +92,26 @@ void get_dom_objects(xmlNode * a_node, struct_news_list * list_ptr)
 	for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
 		/* Typ: XML_ELEMENT_NODE */
 
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> check if cur_node is a XML_ELEMENT_NODE", prgrm_name, __func__);
 		if (cur_node->type == XML_ELEMENT_NODE) {
 
 			/* search for publish date */
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> get the pub date from content", prgrm_name, __func__);
 			dom_pub_date(cur_node);
 
 			/* Wenn der Name ,,title" entspricht */
 
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> get the title from content", prgrm_name, __func__);
 			dom_title(cur_node);
 
 			/* Wenn der Name ,,link" entspricht */
 
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> get the link content", prgrm_name, __func__);
 			dom_link(cur_node);
 
 			/* Wenn der Name ,,description" entspricht */
 
+		log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> get the description content", prgrm_name, __func__);
 			if(!dom_description(cur_node)){
 				log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() -> calling append number %d", prgrm_name, __func__, element_counter);
 				append(&
@@ -408,6 +413,8 @@ append(struct_news ** lst, uint16_t * position,
 
 	if (DEBUG)
 		printf("\nappend(): Leaving append()n");
+	log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE,"%s: %s() leaving append", prgrm_name, __func__);
+ 
 }
 
 
@@ -529,9 +536,8 @@ uint8_t dom_description(xmlNode *cur_node){
 				((char *)cur_node->parent->name,
 				 item_name, u16_item_size)) {
 
-			char *clean_string, *markup_start;
-			int startzeichen, string_lenght;
-			startzeichen = 0;
+			char *clean_string, *markup_start, *p_start_tag;
+			uint32_t u32_size_clean_string, u32_string_lenght;
 			markup_start = MARKUP_START;
 
 			/* test if there is a cripple xml tag */
@@ -539,53 +545,56 @@ uint8_t dom_description(xmlNode *cur_node){
 
 				/* test if it is markup in the string */
 
-				startzeichen = strstr((char *)
-						cur_node->children->content, markup_start)
-					- (char *)
-					&cur_node->
-					children->content;
-				if (startzeichen > 0) {
-					if (DEBUG)
-						printf
-							("\nStartzeichen gefunden bei: %d\n",
-							 startzeichen);
+			p_start_tag = strstr((char *)
+						cur_node->children->content, markup_start);
+
+
+
+				if (p_start_tag) {
+
+#if  1     /* ----- #if 0 : If0Label_2 ----- */
+				log4c_category_log(log_tracer, LOG4C_PRIORITY_DEBUG, "%s: %s() html start tag found in description at position %lu", prgrm_name, __func__, (long unsigned int)p_start_tag);
+
+
+				u32_size_clean_string = (size_t)p_start_tag - (size_t)((char*)cur_node->children->content); 
+				u32_size_clean_string++;
+
+				log4c_category_log(log_tracer, LOG4C_PRIORITY_DEBUG, "%s: %s() u32_size_clean_string: %d", prgrm_name, __func__, u32_size_clean_string);
+
 					clean_string
 						=
 						malloc
-						((startzeichen +
-						  1) * sizeof(char)
+						( u32_size_clean_string * sizeof(char)
 						 /* valgrind */
 						);
 					strncpy
 						(clean_string,
 						 (char *)
-						 cur_node->children->content, startzeichen);
+						 cur_node->children->content, u32_size_clean_string);
+#endif     /* ----- #if 0 : If0Label_2 ----- */
+
 
 				} else {
-					if (DEBUG)
-						printf
-							("\nStartzeichen ist null oder kleiner als null: %d\n",
-							 startzeichen);
 
-					string_lenght
+				log4c_category_log(log_tracer, LOG4C_PRIORITY_TRACE, "%s: %s() no html start tag found in description", prgrm_name, __func__);
+					u32_string_lenght = 0;
+					u32_string_lenght
 						= strlen((char *)
 								cur_node->children->content);
-
+					u32_string_lenght++;
 					clean_string
 						=
 						malloc
-						((string_lenght +
-						  1) * sizeof(char)
-						 /* valgrind */
-						);
+						(u32_string_lenght * sizeof(char));
 
 					strncpy
 						(clean_string,
 						 (char *)
-						 cur_node->children->content, string_lenght);
+						 cur_node->children->content, u32_string_lenght-1);
 					clean_string
-						[string_lenght]
+						[u32_string_lenght-1]
 						= '\0';
+
 				}
 
 				/* strncpy(clean_string, cur_node->children->content, startzeichen); */
@@ -602,18 +611,7 @@ uint8_t dom_description(xmlNode *cur_node){
 				temp_description = NULL;
 
 			}
-
-#if  0     /* ----- #if 0 : If0Label_1 ----- */
-			append(&
-					(list_ptr->start),
-					&element_counter,
-					temp_title,
-					temp_link,
-					temp_description,
-					tmp_pub_date, list_ptr);
-#endif     /* ----- #if 0 : If0Label_1 ----- */
-
-
+		
 			return 0;
 		}
 		return 1;

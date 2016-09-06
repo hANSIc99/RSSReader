@@ -216,10 +216,15 @@ void test_arg(char **argv)
 
 int key_from_string(char *argv)
 {
-	uint8_t i;
+	uint8_t i = 0;
+	uint16_t u16_str_lenght = 0;
 	char *str;
-	str = malloc(strlen(argv) * sizeof(char));
-	memset(str, 0, (strlen(argv) * sizeof(char)));
+
+	u16_str_lenght = strlen(argv);
+	u16_str_lenght++;
+
+	str = malloc(u16_str_lenght * sizeof(char));
+	memset(str, 0, (u16_str_lenght * sizeof(char)));
 
 #if  0				/* ----- #if 0 : If0Label_1 ----- */
 	printf("\nHALLO : %s COUNTER: %d\n", (argv), u8_option_counter);
@@ -231,10 +236,12 @@ int key_from_string(char *argv)
 		str[i] = toupper(argv[i]);
 		i++;
 	}
+	
+	str[i] = '\0' ;
 
 	for (i = 0; i < NKEYS; i++) {
 		type_struct *typ = &lookuptable[i];
-		if (strcmp(typ->key, str) == 0) {
+		if (!(strcmp(typ->key, str))) {
 			free(str);
 			return typ->val;
 		}

@@ -39,7 +39,7 @@ void initial_update(struct_news_list ** List, struct_adress ** address_options)
 			       temp_pointer->position, temp_pointer->title);
 			printf("\nLink: %s\n", temp_pointer->link);
 
-			if (temp_pointer->description != NULL) {
+			if (temp_pointer->description) {
 				printf
 				    ("\nDescription: %s\n\n",
 				     temp_pointer->description);
@@ -157,9 +157,9 @@ void free_list(struct_news_list * list)
 		free(tmp_ptr->title);
 		free(tmp_ptr->description);
 		free(tmp_ptr->link);
-/*
+	if(tmp_ptr->pub_date){
 		free(tmp_ptr->pub_date);
-*/
+	}
 		free(tmp_ptr);
 	}
 
