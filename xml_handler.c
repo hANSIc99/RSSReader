@@ -59,7 +59,7 @@ int dom_parser(const char *content, int length, struct_news_list * list_ptr)
 	 */
 	doc =
 		xmlReadMemory(content, length, "noname.xml",
-				"UTF-8", XML_PARSE_NSCLEAN/* 0 */ );
+				"UTF-8", XML_PARSE_IGNORE_ENC/* 0 */ );
 
 
 
