@@ -11,9 +11,9 @@ DEPS = req_data.h xml_handler.h struct.h update_service.h text.h cmd_args.h json
 OBJ = main.o req_data.o xml_handler.o update_service.o cmd_args.o json_machine.o
 
 
-all: RSSReader
+all: RSSReader_1.0
 
-RSSReader: $(OBJ)
+RSSReader_1.0: $(OBJ)
 	$(CC) $(OBJ) $(LIBS) -o $@ 
 
 
