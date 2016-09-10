@@ -38,7 +38,7 @@
 #include <errno.h>
 
 #define PORT "80"
-#define MAXDATASIZE 100000	/* maximale nummer an Bytes die empfangen werden kann */
+#define MAXDATASIZE 999999	/* maximale nummer an Bytes die empfangen werden kann */
 #define SEC_TIMEOUT 5
 
 #ifndef _REQ_DATA

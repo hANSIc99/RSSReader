@@ -28,6 +28,7 @@
 #define RSS_END "</rss>"
 #define RSS_START "<?xml"
 #define MARKUP_START "(<"
+#define MARKUP_START_2 "<"
 #define READ 0
 
 static char *item_name = "item";
@@ -51,16 +52,19 @@ int dom_parser(const char *content, int length, struct_news_list * list_ptr)
 	xmlDocPtr doc;		/* the resulting document tree */
 	xmlNode *root_element = NULL;
 
+
 	/*
 	 * The document being in memory, it have no base per RFC 2396,
 	 * and the "noname.xml" argument will serve as its base.
 	 */
 	doc =
 		xmlReadMemory(content, length, "noname.xml",
-				NULL, XML_PARSE_NOERROR /* 0 */ );
+				"UTF-8", XML_PARSE_NSCLEAN/* 0 */ );
+
+
 
 	if (doc == NULL) {
-		log4c_category_log(log_debug, LOG4C_PRIORITY_ERROR, "%s: %s() -> parsing the xml-string failed", prgrm_name, __func__);
+		log4c_category_log(log_debug, LOG4C_PRIORITY_ERROR, "%s: %s() -> parsing the xml-string failed: ", prgrm_name, __func__);
 
 		return 1;
 	}
@@ -269,7 +273,8 @@ char *get_server_info(char *xml_string, int startzeichen)
 
 char *get_rss_tag(char *temp_string, char *end_tag, const uint32_t *str_lenght)
 {
-	uint16_t counter, tag_lenght, rss_lenght;
+	uint16_t tag_lenght;
+	uint32_t u32_counter, u32_rss_lenght;
 	char *check_tag;
 	char *rss_string;
 
@@ -281,39 +286,39 @@ char *get_rss_tag(char *temp_string, char *end_tag, const uint32_t *str_lenght)
 		printf("\nInteger tag_lenght: %d\n", tag_lenght);
 	}
 
-	for (counter = *str_lenght; counter > 0; counter--) {
+	for (u32_counter = *str_lenght; u32_counter > 0; u32_counter--) {
 
 		strncpy(check_tag,
-				temp_string + (size_t) (counter -
+				temp_string + (size_t) (u32_counter -
 					tag_lenght), tag_lenght);
 
 		/* Vergleichen ob end_tag und check_tag übereinstimmen */
 		if (strncmp(check_tag, end_tag, tag_lenght)
 				== 0) {
-			rss_lenght = counter;
+			u32_rss_lenght = u32_counter;
 			if (DEBUG)
 				printf
 					("\nEnde gefunden bei zeichen Nummer: %d\n",
-					 counter);
+					 u32_counter);
 			break;
 		}
 
 	}
 	free(check_tag);
 	/* endgültiger String wird erstellt, Ende (unbrauchbar) wird entfernt */
-	rss_string = malloc((rss_lenght + 1) * sizeof(char));
-	memset(rss_string, 0, sizeof(rss_lenght + 1));
-	strncpy(rss_string, temp_string, rss_lenght);
+	rss_string = malloc((u32_rss_lenght + 1) * sizeof(char));
+	memset(rss_string, 0, sizeof(u32_rss_lenght + 1));
+	strncpy(rss_string, temp_string, u32_rss_lenght);
 
 	/* Das letzte Zeichen muss manuel auf \0 gesetzt werden */
-	rss_string[rss_lenght] = '\0';
+	rss_string[u32_rss_lenght] = '\0';
 	if (DEBUG)
-		printf("\nInteger rss_lenght: %d\n", rss_lenght);
+		printf("\nInteger rss_lenght: %d\n", u32_rss_lenght);
 
 	return rss_string;
 }
 
-int get_starttag(const char *xml_string, const char *start_tag)
+uint32_t get_starttag(const char *xml_string, const char *start_tag)
 {
 
 	size_t startzeichen;
@@ -536,9 +541,10 @@ uint8_t dom_description(xmlNode *cur_node){
 				((char *)cur_node->parent->name,
 				 item_name, u16_item_size)) {
 
-			char *clean_string, *markup_start, *p_start_tag;
+			char *clean_string, *markup_start, *markup_start_2, *p_start_tag;
 			uint32_t u32_size_clean_string, u32_string_lenght;
 			markup_start = MARKUP_START;
+			markup_start_2 = MARKUP_START_2;
 
 			/* test if there is a cripple xml tag */
 			if (cur_node->children) {
@@ -547,8 +553,6 @@ uint8_t dom_description(xmlNode *cur_node){
 
 			p_start_tag = strstr((char *)
 						cur_node->children->content, markup_start);
-
-
 
 				if (p_start_tag) {
 
